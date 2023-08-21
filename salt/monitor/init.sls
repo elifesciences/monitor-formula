@@ -83,49 +83,6 @@ prometheus-systemd-service:
             - prometheus-web-config
             - prometheus-data-dir
 
-# node exporter
-# todo: shift this into builder-base
-
-node-exporter-installation:
-    archive.extracted:
-        - name: /srv
-        - source: https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
-        - source_hash: ecc41b3b4d53f7b9c16a370419a25a133e48c09dfc49499d63bcc0c5e0cf3d01
-        - if_missing: /srv/node_exporter
-
-    file.symlink:
-        - name: /srv/node_exporter
-        - target: /srv/node_exporter-1.6.1.linux-amd64
-        - force: true
-        - require:
-            - archive: node-exporter-installation
-
-node-exporter-ownership:
-    file.directory:
-        - name: /srv/node_exporter
-        - allow_symlink: true
-        - user: prometheus
-        - group: prometheus
-        - recurse:
-            - user
-            - group
-        - require:
-            - prometheus-user-group
-            - node-exporter-installation
-
-node-exporter-systemd-service:
-    file.managed:
-        - name: /lib/systemd/system/node_exporter.service
-        - source: salt://monitor/config/lib-systemd-system-node_exporter.service
-
-    service.running:
-        - name: node_exporter
-        - enable: true
-        - require:
-            - file: node-exporter-systemd-service
-            - node-exporter-installation
-            - node-exporter-ownership
-
 # grafana
 
 grafana-user-group:

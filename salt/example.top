@@ -1,4 +1,5 @@
 base:
     '*':
         - elife
+        - elife.prometheus-node-exporter
         - monitor
