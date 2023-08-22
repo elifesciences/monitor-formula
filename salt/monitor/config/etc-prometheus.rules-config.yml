@@ -1,0 +1,25 @@
+groups:
+-   name: "common"
+    rules:
+    # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#the-up-query
+    -   alert: TargetMissing
+        expr: up == 0
+        for: 1m
+        labels:
+            severity: critical
+        annotations:
+            summary: "Prometheus Target Missing (instance {{ $labels.instance }})"
+            description: "A Prometheus Target has gone missing, please investigate"
+
+    # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#alerts-for-use-and-red
+    # Please add ignored mount points in node_exporter parameters like
+    # "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|run)($|/)".
+    # Same rule using "node_filesystem_free_bytes" will fire when disk fills for non-root users.
+    -   alert: HostDiskWillFillIn24Hours
+        expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+        for: 2m
+        labels:
+            severity: warning
+        annotations:
+            summary: Host disk will fill in 24 hours (instance {{ $labels.instance }})
+            description: "Filesystem is predicted to run out of space within the next 24 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"

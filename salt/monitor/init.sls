@@ -39,11 +39,18 @@ prometheus-ownership:
             - prometheus-user-group
             - prometheus-installation
 
+prometheus-rules-config:
+    file.managed:
+        - name: /etc/prometheus.rules-config.yml
+        - source: salt://monitor/config/etc-prometheus.rules-config.yml
+
 prometheus-config:
     file.managed:
         - name: /etc/prometheus.yml
         - source: salt://monitor/config/etc-prometheus.yml
         - template: jinja
+        - require:
+            - prometheus-rules-config
 
     cmd.run:
         - name: /srv/prometheus/promtool check config /etc/prometheus.yml
