@@ -243,6 +243,12 @@ alertmanager-data-dir:
         - require:
             - alertmanager-user-group
 
+alertmanager-web-config:
+    file.managed:
+        - name: /etc/alertmanager.web-config.yml
+        - source: salt://monitor/config/etc-alertmanager.web-config.yml
+        - template: jinja
+
 alertmanager-systemd-service:
     file.managed:
         - name: /lib/systemd/system/alertmanager.service
@@ -259,6 +265,7 @@ alertmanager-systemd-service:
             - alertmanager-ownership
             - alertmanager-config
             - alertmanager-data-dir
+            - alertmanager-web-config
 
 # nginx reverse proxy
 
@@ -274,6 +281,14 @@ grafana-nginx-proxy:
     file.managed:
         - name: /etc/nginx/sites-enabled/grafana.conf
         - source: salt://monitor/config/etc-nginx-sites-enabled-grafana.conf
+        - template: jinja
+        - listen_in:
+            - service: nginx-server-service
+
+alertmanager-nginx-proxy:
+    file.managed:
+        - name: /etc/nginx/sites-enabled/alertmanager.conf
+        - source: salt://monitor/config/etc-nginx-sites-enabled-alertmanager.conf
         - template: jinja
         - listen_in:
             - service: nginx-server-service

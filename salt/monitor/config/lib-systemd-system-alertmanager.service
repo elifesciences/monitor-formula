@@ -8,6 +8,9 @@ Type=simple
 User=alertmanager
 Group=alertmanager
 ExecStart=/srv/alertmanager/alertmanager \
+    --cluster.listen-address= \
+    --web.config.file=/etc/alertmanager.web-config.yml \
+    --web.listen-address=:9095 \
     --config.file=/etc/alertmanager.yml \
     --storage.path=/srv/alertmanager-data
 
