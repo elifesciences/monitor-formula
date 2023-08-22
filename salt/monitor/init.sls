@@ -183,7 +183,84 @@ grafana-systemd-service:
             - grafana-ini-config
             - grafana-log-dir
 
-# reverse proxy
+# AlertManager
+
+alertmanager-user-group:
+    group.present:
+        - name: alertmanager
+
+    user.present:
+        - name: alertmanager
+        - shell: /bin/false
+        - groups:
+            - alertmanager
+        - require:
+            - group: alertmanager
+
+alertmanager-installation:
+    archive.extracted:
+        - name: /srv
+        - source: https://github.com/prometheus/alertmanager/releases/download/v0.25.0/alertmanager-0.25.0.linux-amd64.tar.gz
+        - source_hash: 206cf787c01921574ca171220bb9b48b043c3ad6e744017030fed586eb48e04b
+        - if_missing: /srv/alertmanager-0.25.0.linux-amd64
+
+    file.symlink:
+        - name: /srv/alertmanager
+        - target: /srv/alertmanager-0.25.0.linux-amd64
+        - force: true
+        - require:
+            - archive: alertmanager-installation
+
+alertmanager-ownership:
+    file.directory:
+        - name: /srv/alertmanager
+        - allow_symlink: true
+        - user: alertmanager
+        - group: alertmanager
+        - recurse:
+            - user
+            - group
+        - require:
+            - alertmanager-user-group
+            - alertmanager-installation
+
+alertmanager-config:
+    file.managed:
+        - name: /etc/alertmanager.yml
+        - source: salt://monitor/config/etc-alertmanager.yml
+        - template: jinja
+
+    cmd.run:
+        - name: /srv/alertmanager/amtool check-config /etc/alertmanager.yml
+        - require:
+            - file: alertmanager-config
+
+alertmanager-data-dir:
+    file.directory:
+        - name: /srv/alertmanager-data
+        - user: alertmanager
+        - group: alertmanager
+        - require:
+            - alertmanager-user-group
+
+alertmanager-systemd-service:
+    file.managed:
+        - name: /lib/systemd/system/alertmanager.service
+        - source: salt://monitor/config/lib-systemd-system-alertmanager.service
+
+    service.running:
+        - name: alertmanager
+        - enable: true
+        - watch:
+            - alertmanager-config
+        - require:
+            - file: alertmanager-systemd-service
+            - alertmanager-installation
+            - alertmanager-ownership
+            - alertmanager-config
+            - alertmanager-data-dir
+
+# nginx reverse proxy
 
 prometheus-nginx-proxy:
     file.managed:

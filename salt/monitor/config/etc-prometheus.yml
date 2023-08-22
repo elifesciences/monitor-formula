@@ -21,3 +21,9 @@ scrape_configs:
 
 rule_files:
 -   /etc/prometheus.rules-config.yml
+
+alerting:
+    alertmanagers:
+        - static_configs:
+            - targets:
+                - localhost:9093

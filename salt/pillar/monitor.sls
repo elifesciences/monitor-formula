@@ -2,14 +2,24 @@ monitor:
     prometheus:
 
         # HTTP basic credentials for prometheus web interface.
-        # todo: stick behind nginx just like everything else.
         web:
             username: admin
             password: admin
-            # "admin" hashed.
+            # "admin" hashed
             password_hashed: "$2b$12$14ab29qml2YgqM3U.Bxy/OSbI1ON5GupEbcUVDm59WjnZ8t88hiK6"
 
         # query AWS for EC2 instances with node_exporter to poll
         ec2_sd_configs:
             access_key: AKIAFOOBAR
             secret_key: asdfasdfasdf
+
+    alertmanager:
+        smtp: email-smtp.us-east-1.amazonaws.com:587 # SES throttles port 25
+        from: no-reply@example.org
+        user:
+        # this is *not* the AWS secret key for the IAM user but a value derived from it.
+        # see: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/smtp-credentials.html
+        pass:
+        receiver:
+            name: techalerts
+            email_to: bar@example.org
