@@ -10,6 +10,7 @@ Type=simple
 ExecStart=/srv/prometheus/prometheus \
     --config.file=/etc/prometheus.yml \
     --web.config.file=/etc/prometheus.web-config.yml \
+    --web.listen-address=localhost:9091 \
     --storage.tsdb.path=/srv/prometheus-data \
     --web.console.templates=/srv/prometheus/consoles \
     --web.console.libraries=/srv/prometheus/console_libraries

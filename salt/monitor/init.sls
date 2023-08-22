@@ -1,5 +1,4 @@
-# install prometheus
-# install node_exporter for current machine 
+# prometheus
 
 prometheus-user-group:
     group.present:
@@ -177,3 +176,20 @@ grafana-systemd-service:
             - grafana-ini-config
             - grafana-log-dir
 
+# reverse proxy
+
+prometheus-nginx-proxy:
+    file.managed:
+        - name: /etc/nginx/sites-enabled/prometheus.conf
+        - source: salt://monitor/config/etc-nginx-sites-enabled-prometheus.conf
+        - template: jinja
+        - listen_in:
+            - service: nginx-server-service
+
+grafana-nginx-proxy:
+    file.managed:
+        - name: /etc/nginx/sites-enabled/grafana.conf
+        - source: salt://monitor/config/etc-nginx-sites-enabled-grafana.conf
+        - template: jinja
+        - listen_in:
+            - service: nginx-server-service

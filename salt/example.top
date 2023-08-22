@@ -1,5 +1,6 @@
 base:
     '*':
         - elife
+        - elife.nginx
         - elife.prometheus-node-exporter
         - monitor
