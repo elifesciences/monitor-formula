@@ -24,6 +24,9 @@ rule_files:
 
 alerting:
     alertmanagers:
-        - static_configs:
-            - targets:
-                - localhost:9095
+        -   static_configs:
+                - targets:
+                    - localhost:9095
+            basic_auth:
+                username: "{{ pillar.monitor.prometheus.web.username }}"
+                password: "{{ pillar.monitor.prometheus.web.password }}"

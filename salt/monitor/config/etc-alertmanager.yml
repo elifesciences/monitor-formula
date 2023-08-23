@@ -14,6 +14,7 @@ receivers:
 route:
     # "... a receiver configured so alerts that do not match any of the sub-routes are sent to someone."
     receiver: "{{ pillar.monitor.alertmanager.receiver.name }}"
+    # todo: what is 'cluster' here?
     group_by: ['alertname', 'cluster']
 
     # child route trees.
