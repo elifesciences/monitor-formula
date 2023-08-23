@@ -1,3 +1,4 @@
+# https://prometheus.io/docs/alerting/latest/configuration/
 # https://github.com/prometheus/alertmanager#example
 
 receivers:
@@ -14,8 +15,14 @@ receivers:
 route:
     # "... a receiver configured so alerts that do not match any of the sub-routes are sent to someone."
     receiver: "{{ pillar.monitor.alertmanager.receiver.name }}"
-    # todo: what is 'cluster' here?
+    
+    # 'cluster' here is the AlertManager cluster so alerts from different instances are grouped together.
+    # lsh@2023-08-23: clustering is disabled until it needs to be enabled, otherwise it listens by default on 9094.
     group_by: ['alertname', 'cluster']
+
+    # How long to wait before sending a notification again if it has already
+    # been sent successfully for an alert. (Usually ~3h or more).
+    repeat_interval: 24h
 
     # child route trees.
     #routes:
