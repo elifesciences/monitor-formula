@@ -1,15 +1,18 @@
+# https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/
+
 groups:
     - name: "common"
       rules:
           # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#the-up-query
-          - alert: TargetMissing
-            expr: up == 0
-            for: 1m
+          # matches old "host not reporting" alert
+          - alert: ProductionHostNotReporting
+            expr: up{ec2_env="prod"} == 0
+            for: 5m
             labels:
                 severity: critical
             annotations:
-                summary: "Prometheus Target Missing (instance {{ $labels.instance }})"
-                description: "A Prometheus Target has gone missing, please investigate"
+                # "A production host is not reporting: lax--prod--3"
+                summary: "A production host is not reporting: {{ $labels.ec2_name }}"
 
           # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#alerts-for-use-and-red
           # Please add ignored mount points in node_exporter parameters like

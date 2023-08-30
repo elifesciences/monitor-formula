@@ -29,6 +29,7 @@ scrape_configs:
             target_label: "ec2_node"
           - source_labels: ["__meta_ec2_tag_Cluster"] # annotations--continuumtest
             target_label: "ec2_cluster"
+      # todo: instance type (t3.medium), instance state (stopped, running), availability zone (us-east-1d), region (us-east-1), ami, ...
 
 rule_files:
     - /etc/prometheus.rules-config.yml

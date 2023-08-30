@@ -44,6 +44,11 @@ prometheus-rules-config:
         - name: /etc/prometheus.rules-config.yml
         - source: salt://monitor/config/etc-prometheus.rules-config.yml
 
+    cmd.run:
+        - name: /srv/prometheus/promtool check rules /etc/prometheus.rules-config.yml
+        - require:
+            - file: prometheus-rules-config
+
 prometheus-config:
     file.managed:
         - name: /etc/prometheus.yml
