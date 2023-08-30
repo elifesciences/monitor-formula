@@ -64,6 +64,23 @@ groups:
                 # "CPU usage over 80% for 15mins: lax--prod--3"
                 summary: "CPU usage over 80% for 15mins: {{ $labels.ec2_name }}"
 
+          - alert: MemoryUsageHigh
+            expr: (100 - (node_memory_MemAvailable_bytes * 100) / node_memory_MemTotal_bytes) > 70
+            for: 10m
+            labels:
+                severity: warning
+            annotations:
+                # "Memory usage over 70% for 10mins: lax--prod--3"
+                summary: "Memory usage over 70% for 10mins: {{ $labels.ec2_name }}"
+
+          - alert: MemoryUsageVeryHigh
+            expr: (100 - (node_memory_MemAvailable_bytes * 100) / node_memory_MemTotal_bytes) > 90
+            for: 5m
+            labels:
+                severity: critical
+            annotations:
+                # "Memory usage over 70% for 10mins: lax--prod--3"
+                summary: "Memory usage over 90% for 5mins: {{ $labels.ec2_name }}"
 
           # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#alerts-for-use-and-red
           # Please add ignored mount points in node_exporter parameters like
