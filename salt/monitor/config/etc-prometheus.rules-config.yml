@@ -82,6 +82,15 @@ groups:
                 # "Memory usage over 70% for 10mins: lax--prod--3"
                 summary: "Memory usage over 90% for 5mins: {{ $labels.ec2_name }}"
 
+          - alert: CPUStealVeryHigh
+            expr: sum by (instance, cpu) (rate(node_cpu_seconds_total{mode="steal"} [2m])) > 20
+            for: 10m
+            labels:
+                severity: critical
+            annotations:
+                # "CPU steal amount over 20% for 10mins: lax--prod--3"
+                summary: "CPU steal amount over 20% for 10mins: {{ $labels.ec2_name }}"
+
           # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#alerts-for-use-and-red
           # Please add ignored mount points in node_exporter parameters like
           # "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|run)($|/)".
