@@ -14,6 +14,7 @@ groups:
                 # "A production host is not reporting: lax--prod--3"
                 summary: "A production host is not reporting: {{ $labels.ec2_name }}"
 
+
     - name: "continuumtest policy"
       rules:
           - alert: ContinuumtestHostNotReporting
@@ -22,11 +23,29 @@ groups:
             labels:
                 severity: warning
             annotations:
-                # "A continuumtest host is not reporting: lax--continuumtest--1"
+                # "A continuumtest host is not reporting: lax--prod--3"
                 summary: "A continuumtest host is not reporting: {{ $labels.ec2_name }}"
 
     - name: "common policy"
       rules:
+          - alert: DiskUsageHigh
+            expr: (100 - ((node_filesystem_avail_bytes{mountpoint=~"/|/ext"} * 100) / node_filesystem_size_bytes)) > 70
+            for: 20m
+            labels:
+                severity: warning
+            annotations:
+                # "Disk usage ('/') is over 70%: lax--prod--3"
+                summary: "Disk usage ('{{ $labels.mountpoint }}') is over 70%: {{ $labels.ec2_name }}"
+
+          - alert: DiskUsageVeryHigh
+            expr: (100 - ((node_filesystem_avail_bytes{mountpoint=~"/|/ext"} * 100) / node_filesystem_size_bytes)) > 80
+            for: 5m
+            labels:
+                severity: critical
+            annotations:
+                # "Disk usage ('/ext') is over 80%: lax--prod--3"
+                summary: "Disk usage ('{{ $labels.mountpoint }}') is over 80%: {{ $labels.ec2_name }}"
+
           # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#alerts-for-use-and-red
           # Please add ignored mount points in node_exporter parameters like
           # "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|run)($|/)".
