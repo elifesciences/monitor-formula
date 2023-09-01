@@ -56,7 +56,7 @@ groups:
           # cribbed from here: https://samber.github.io/awesome-prometheus-alerts/rules#rule-host-and-hardware-1-16
           # todo: monitor for under-utilised prod instances in general.
           - alert: CPUUsageSuspiciouslyLow
-            expr: (100 - (rate(node_cpu_seconds_total{mode="idle",ec2_cluster=~"iiif--prod|journal--prod|lax--prod"}[30m]) * 100) < 30) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+            expr: (100 - (rate(node_cpu_seconds_total{ec2_cluster=~"iiif--prod|journal--prod|lax--prod",mode="idle"}[30m]) * 100)) > 30
             for: 30m
             labels:
                 severity: warning
