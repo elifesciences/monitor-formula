@@ -9,17 +9,18 @@ global:
     smtp_require_tls: true
 
 receivers:
+    - name: sink
+
     - name: techalerts
       email_configs:
           - to: "{{ pillar.monitor.alertmanager.receiver.email_to }}"
             send_resolved: true
 
-    - name: sink
-
 # root matcher, matches everything
 route:
     # "... a receiver configured so alerts that do not match any of the sub-routes are sent to someone."
-    receiver: techalerts
+    # default policy is to sink all alerts and opt-in to classes of alerts (critical, affects staging/prod, etc).
+    receiver: sink
 
     # 'cluster' here is the AlertManager cluster so alerts from different instances are grouped together.
     # clustering is disabled until it needs to be enabled, otherwise it listens by default on 9094.
@@ -30,17 +31,18 @@ route:
     repeat_interval: 24h
 
     routes:
-        # only send alert if prod or continuumtest hosts are down
+        # always send email for critical alerts in staging/prod envs.
         - matchers:
-            - "alertname = HostNotResponding"
+            - "severity = critical"
             - 'ec2_env =~ "staging|continuumtest|continuumtestpreview|prod"'
           receiver: techalerts
 
-        # sink any non-prod warnings.
-        - matchers:
-            - "severity = warning"
-            - "ec2_env != prod"
-          receiver: sink
+        # lsh@2023-09-06: lets ignore warnings for now and see if the inhibit rules help reduce the noise.
+        # only send emails for warnings in the prod env.
+        #- matchers:
+        #    - "severity = warnings"
+        #    - 'ec2_env =~ "prod"'
+        #  receiver: techalerts
 
 # Inhibition rules allow to mute a set of alerts given that another alert is firing.
 # We use this to mute any warning-level notifications if the same alert is already critical.
