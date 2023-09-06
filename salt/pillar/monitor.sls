@@ -20,6 +20,7 @@ monitor:
         # this is *not* the AWS secret key for the IAM user but a value derived from it.
         # see: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/smtp-credentials.html
         pass:
+        # the default receiver is an email receiver and needs somewhere to send alerts.
         receiver:
             name: techalerts
             email_to: bar@example.org

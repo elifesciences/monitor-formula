@@ -4,8 +4,6 @@
 groups:
     - name: "production policy"
       rules:
-          # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#the-up-query
-          # matches old "host not reporting" alert
           - alert: ProductionHostNotReporting
             expr: up{ec2_env="prod"} == 0
             for: 5m
@@ -13,7 +11,6 @@ groups:
                 severity: critical
             annotations:
                 summary: "A production host is not reporting: {{ $labels.ec2_name }}"
-
 
     - name: "continuumtest policy"
       rules:
@@ -27,6 +24,9 @@ groups:
 
     - name: "common policy"
       rules:
+
+          # ---
+
           - alert: DiskUsageHigh
             expr: (100 - ((node_filesystem_avail_bytes{mountpoint=~"/|/ext"} * 100) / node_filesystem_size_bytes)) > 70
             for: 20m
@@ -36,7 +36,7 @@ groups:
                 # "Disk usage ('/') over 70%: lax--prod--3"
                 summary: "Disk usage ('{{ $labels.mountpoint }}') over 70%: {{ $labels.ec2_name }}"
 
-          - alert: DiskUsageVeryHigh
+          - alert: DiskUsageHigh
             expr: (100 - ((node_filesystem_avail_bytes{mountpoint=~"/|/ext"} * 100) / node_filesystem_size_bytes)) > 80
             for: 5m
             labels:
@@ -44,6 +44,8 @@ groups:
             annotations:
                 # "Disk usage ('/ext') over 80%: lax--prod--3"
                 summary: "Disk usage ('{{ $labels.mountpoint }}') over 80%: {{ $labels.ec2_name }}"
+
+          # ---
 
           - alert: CPUUsageHigh
             expr: (100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 70
@@ -53,23 +55,25 @@ groups:
             annotations:
                 summary: "CPU usage over 70% for 10mins: {{ $labels.ec2_name }}"
 
-          # cribbed from here: https://samber.github.io/awesome-prometheus-alerts/rules#rule-host-and-hardware-1-16
-          # todo: monitor for under-utilised prod instances in general.
-          - alert: CPUUsageSuspiciouslyLow
-            expr: (100 - (rate(node_cpu_seconds_total{ec2_cluster=~"iiif--prod|journal--prod|lax--prod",mode="idle"}[30m]) * 100)) > 30
-            for: 30m
-            labels:
-                severity: warning
-            annotations:
-                summary: "CPU usage suspiciously low for 30mins: {{ $labels.ec2_name }}"
-
-          - alert: CPUUsageVeryHigh
+          - alert: CPUUsageHigh
             expr: (100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 80
             for: 15m
             labels:
                 severity: critical
             annotations:
                 summary: "CPU usage over 80% for 15mins: {{ $labels.ec2_name }}"
+
+          # --- cpu < 30% for 30mins. Is this rule correct?
+
+          - alert: CPUUsageSuspiciouslyLow
+            expr: (rate(node_cpu_seconds_total{ec2_cluster=~"iiif--prod|journal--prod|lax--prod",mode="idle"}[30m]) * 100) < 30
+            for: 30m
+            labels:
+                severity: warning
+            annotations:
+                summary: "CPU usage suspiciously low for 30mins: {{ $labels.ec2_name }}"
+
+          # ---
 
           - alert: MemoryUsageHigh
             expr: (100 - (node_memory_MemAvailable_bytes * 100) / node_memory_MemTotal_bytes) > 70
@@ -79,7 +83,7 @@ groups:
             annotations:
                 summary: "Memory usage over 70% for 10mins: {{ $labels.ec2_name }}"
 
-          - alert: MemoryUsageVeryHigh
+          - alert: MemoryUsageHigh
             expr: (100 - (node_memory_MemAvailable_bytes * 100) / node_memory_MemTotal_bytes) > 90
             for: 5m
             labels:
@@ -87,7 +91,9 @@ groups:
             annotations:
                 summary: "Memory usage over 90% for 5mins: {{ $labels.ec2_name }}"
 
-          - alert: CPUStealVeryHigh
+          # ---
+
+          - alert: CPUStealHigh
             expr: sum by (instance, cpu) (rate(node_cpu_seconds_total{mode="steal"} [2m])) > 20
             for: 10m
             labels:
@@ -95,7 +101,8 @@ groups:
             annotations:
                 summary: "CPU steal amount over 20% for 10mins: {{ $labels.ec2_name }}"
 
-          # sustained elevated disk I/O
+          # --- sustained elevated disk I/O
+
           - alert: DiskIOHigh
             expr: rate(node_disk_io_time_weighted_seconds_total[2m]) > 0.5
             for: 20m
@@ -104,13 +111,15 @@ groups:
             annotations:
                 summary: "Disk I/O over 50% for 20mins: {{ $labels.ec2_name }}"
 
-          - alert: DiskIOVeryHigh
+          - alert: DiskIOHigh
             expr: rate(node_disk_io_time_weighted_seconds_total[2m]) > 0.8
             for: 10m
             labels:
                 severity: critical
             annotations:
                 summary: "Disk I/O over 80% for 10mins: {{ $labels.ec2_name }}"
+
+          # ---
 
           - alert: SwapUsageHigh
             expr: ((1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100) > 70
@@ -120,6 +129,16 @@ groups:
             annotations:
                 summary: "Swap usage over 70% for 10m: {{ $labels.ec2_name }}"
 
+          - alert: SwapUsageHigh
+            expr: ((1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100) > 80
+            for: 5m
+            labels:
+                severity: critical
+            annotations:
+                summary: "Swap usage over 80% for 5m: {{ $labels.ec2_name }}"
+
+    - name: "new, experimental"
+      rules:
           # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#alerts-for-use-and-red
           # Please add ignored mount points in node_exporter parameters like
           # "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|run)($|/)".

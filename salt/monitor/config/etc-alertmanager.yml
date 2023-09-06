@@ -1,16 +1,22 @@
 # https://prometheus.io/docs/alerting/latest/configuration/
 # https://github.com/prometheus/alertmanager#example
 
+global:
+    smtp_from: "{{ pillar.monitor.alertmanager.from }}"
+    smtp_smarthost: "{{ pillar.monitor.alertmanager.smtp }}"
+    smtp_auth_username: "{{ pillar.monitor.alertmanager.user }}"
+    smtp_auth_password: "{{ pillar.monitor.alertmanager.pass }}"
+    smtp_require_tls: true
+
 receivers:
+    # default receiver
     - name: "{{ pillar.monitor.alertmanager.receiver.name }}"
       email_configs:
           - to: "{{ pillar.monitor.alertmanager.receiver.email_to }}"
-            from: "{{ pillar.monitor.alertmanager.from }}"
-            smarthost: "{{ pillar.monitor.alertmanager.smtp }}"
-            auth_username: "{{ pillar.monitor.alertmanager.user }}"
-            auth_password: "{{ pillar.monitor.alertmanager.pass }}"
-            require_tls: true
             send_resolved: true
+
+    # sink
+    - name: "noop"
 
 # root matcher, matches everything
 route:
@@ -18,23 +24,19 @@ route:
     receiver: "{{ pillar.monitor.alertmanager.receiver.name }}"
 
     # 'cluster' here is the AlertManager cluster so alerts from different instances are grouped together.
-    # lsh@2023-08-23: clustering is disabled until it needs to be enabled, otherwise it listens by default on 9094.
+    # clustering is disabled until it needs to be enabled, otherwise it listens by default on 9094.
     group_by: ["alertname", "cluster"]
 
     # How long to wait before sending a notification again if it has already
     # been sent successfully for an alert. (Usually ~3h or more).
     repeat_interval: 24h
 
-    # child route trees.
-    #routes:
-    #-   match_re:
-    #        service: ^(foo1|foo2|baz)$
-    # "a sub-route for critical alerts"
-    # this could be interesting: warning (nobody), error (techalerts), critical (specific individuals)
-    #routes:
-    #-   match:
-    #        severity: critical
-    #    receiver: "critical-response-email"
+    routes:
+        # sink any non-prod warnings.
+        - matchers:
+            - "severity = warning"
+            - "ec2_env != prod"
+          receiver: noop
 
 # Inhibition rules allow to mute a set of alerts given that another alert is firing.
 # We use this to mute any warning-level notifications if the same alert is already critical.
