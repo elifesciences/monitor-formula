@@ -2,28 +2,17 @@
 # https://github.com/samber/awesome-prometheus-alerts/tree/master
 
 groups:
-    - name: "production policy"
+
+    - name: "common policy"
+
       rules:
-          - alert: ProductionHostNotReporting
-            expr: up{ec2_env="prod"} == 0
+          - alert: HostNotReporting # if you change this alert name also update AlertManager routing rules
+            expr: up == 0
             for: 5m
             labels:
                 severity: critical
             annotations:
-                summary: "A production host is not reporting: {{ $labels.ec2_name }}"
-
-    - name: "continuumtest policy"
-      rules:
-          - alert: ContinuumtestHostNotReporting
-            expr: up{ec2_env="continuumtest"} == 0
-            for: 5m
-            labels:
-                severity: warning
-            annotations:
-                summary: "A continuumtest host is not reporting: {{ $labels.ec2_name }}"
-
-    - name: "common policy"
-      rules:
+                summary: "A host is not reporting: {{ $labels.ec2_name }}"
 
           # ---
 
