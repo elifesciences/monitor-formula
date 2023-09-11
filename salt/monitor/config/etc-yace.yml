@@ -4,15 +4,15 @@ static:
   # aws cloudwatch list-metrics > aws-cloudwatch-metrics.json
   # cat aws-cloudwatch-metrics.json | jq '.Metrics | .[] | select(.Namespace == "AWS/Route53")'
   - namespace: AWS/Route53
-    name: Route53
+    name: prod--journal.elifesciences.org/status
     regions:
       - us-east-1
     metrics:
       - name: HealthCheckPercentageHealthy
-        #statistics:
-        #- Minimum
-        #period: 60
-        #length: 300
+        statistics:
+        - Average
+        period: 60 # seconds
+        length: 300 # seconds, 5 minutes
     dimensions:
       - name: HealthCheckId
         value: 85f45d11-417f-439a-ba8e-cd2c65a0d051 # https://prod--journal.elifesciences.org:443/status
