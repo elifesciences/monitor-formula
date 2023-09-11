@@ -5,8 +5,7 @@ monitor:
         web:
             username: admin
             password: admin
-            # "admin" hashed
-            password_hashed: "$2b$12$14ab29qml2YgqM3U.Bxy/OSbI1ON5GupEbcUVDm59WjnZ8t88hiK6"
+            password_hashed: "$2b$12$14ab29qml2YgqM3U.Bxy/OSbI1ON5GupEbcUVDm59WjnZ8t88hiK6" # "admin" hashed
 
         # query AWS for EC2 instances with node_exporter to poll
         ec2_sd_configs:
@@ -22,3 +21,8 @@ monitor:
         pass:
         receiver:
             email_to: bar@example.org
+
+    yace:
+        aws:
+            access_key: AKIAFOOBAR
+            secret_key: asdfasdfasdf

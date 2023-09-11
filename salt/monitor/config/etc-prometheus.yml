@@ -7,11 +7,6 @@ scrape_configs:
           username: "{{ pillar.monitor.prometheus.web.username }}"
           password: "{{ pillar.monitor.prometheus.web.password }}"
 
-    - job_name: "node_exporter"
-      static_configs:
-          - targets:
-                - "localhost:9100"
-
     - job_name: "aws-ec2"
       ec2_sd_configs:
           - region: us-east-1
@@ -29,7 +24,12 @@ scrape_configs:
             target_label: "ec2_node"
           - source_labels: ["__meta_ec2_tag_Cluster"] # annotations--continuumtest
             target_label: "ec2_cluster"
-      # todo: instance type (t3.medium), instance state (stopped, running), availability zone (us-east-1d), region (us-east-1), ami, ...
+      # also: instance type (t3.medium), instance state (stopped, running), availability zone (us-east-1d), region (us-east-1), ami, ...
+
+    - job_name: "yace"
+      static_configs:
+        - targets:
+            - "localhost:9097"
 
 rule_files:
     - /etc/prometheus.rules-config.yml

@@ -1,0 +1,19 @@
+[Unit]
+Description=YACE - Yet Another Cloudwatch Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=yace
+Group=yace
+ENVIRONMENT="AWS_ACCESS_KEY_ID={{ pillar.monitor.yace.aws.access_key }}"
+ENVIRONMENT="AWS_SECRET_ACCESS_KEY={{ pillar.monitor.yace.aws.secret_key }}"
+ExecStart=/usr/local/bin/yace \
+    --config.file /etc/yace.yml \
+    --listen-address 127.0.0.1:9097 \
+    --labels-snake-case true
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -272,6 +272,64 @@ alertmanager-systemd-service:
             - alertmanager-data-dir
             - alertmanager-web-config
 
+# YACE AWS exporter
+
+yace-user-group:
+    group.present:
+        - name: yace
+
+    user.present:
+        - name: yace
+        - shell: /bin/false
+        - groups:
+            - yace
+        - require:
+            - group: yace
+
+yace-installation:
+    archive.extracted:
+        - name: /usr/local/bin
+        - source: https://github.com/nerdswords/yet-another-cloudwatch-exporter/releases/download/v0.54.1/yet-another-cloudwatch-exporter_0.54.1_Linux_x86_64.tar.gz
+        - source_hash: b93e080a429388e68aaa6f3745268f959e2d9f9e979508038bbcf05b5c300660
+        - enforce_toplevel: false
+        - if_missing: /usr/local/bin/yace
+
+    file.managed:
+        - name: /usr/local/bin/yace
+        - user: yace
+        - group: yace
+        - require:
+            - archive: yace-installation
+            - yace-user-group
+
+yace-config:
+    file.managed:
+        - name: /etc/yace.yml
+        - source: salt://monitor/config/etc-yace.yml
+        - template: jinja
+
+    cmd.run:
+        - name: /usr/local/bin/yace verify-config --config.file /etc/yace.yml
+        - require:
+            - file: alertmanager-config
+
+yace-systemd-service:
+    file.managed:
+        - name: /lib/systemd/system/yace.service
+        - source: salt://monitor/config/lib-systemd-system-yace.service
+        - template: jinja
+
+    service.running:
+        - name: yace
+        - enable: true
+        - init_delay: 2 # seconds
+        - watch:
+            - yace-config
+        - require:
+            - file: yace-systemd-service
+            - yace-installation
+            - yace-config
+
 # nginx reverse proxy
 
 prometheus-nginx-proxy:

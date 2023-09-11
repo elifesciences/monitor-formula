@@ -1,0 +1,19 @@
+apiVersion: v1alpha1
+sts-region: us-east-1
+static:
+  # aws cloudwatch list-metrics > aws-cloudwatch-metrics.json
+  # cat aws-cloudwatch-metrics.json | jq '.Metrics | .[] | select(.Namespace == "AWS/Route53")'
+  - namespace: AWS/Route53
+    name: Route53
+    regions:
+      - us-east-1
+    metrics:
+      - name: HealthCheckPercentageHealthy
+        #statistics:
+        #- Minimum
+        #period: 60
+        #length: 300
+    dimensions:
+      - name: HealthCheckId
+        value: 85f45d11-417f-439a-ba8e-cd2c65a0d051 # https://prod--journal.elifesciences.org:443/status
+
