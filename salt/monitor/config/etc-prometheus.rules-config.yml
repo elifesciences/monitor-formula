@@ -3,8 +3,17 @@
 
 groups:
 
-    - name: "common policy"
+    - name: "health checks" # 'synthetics' under NewRelic
+      rules:
+        - alert: "Journal (bypass CDN)"
+          expr: aws_route53_health_check_percentage_healthy_average{name="prod--journal.elifesciences.org/status"} < 100
+          for: 1m
+          labels:
+              severity: critical
+          annotations:
+              summary: "Health check for the journal behind the CDN has been less than 100% for 1 minute."
 
+    - name: "infrastructure"
       rules:
           - alert: HostNotReporting # if you change this alert name also update AlertManager routing rules
             expr: up == 0
