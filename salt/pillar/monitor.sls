@@ -26,3 +26,10 @@ monitor:
         aws:
             access_key: AKIAFOOBAR
             secret_key: asdfasdfasdf
+
+    healthcheck_list:
+        - label: Foo (Bar) # Prometheus alert name
+          name: foo-bar # AWS Route53 health check 'name'
+          id: 1234-5678-91011 # AWS Route53 health check ID
+          duration: 1m
+          description: "Health check for foo has been less than 100% for 1 minute."

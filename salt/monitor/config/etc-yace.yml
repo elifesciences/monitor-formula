@@ -1,10 +1,12 @@
 apiVersion: v1alpha1
 sts-region: us-east-1
+{% if not pillar.monitor.healthcheck_list %}
+static: []
+{% else %}
 static:
-  # aws cloudwatch list-metrics > aws-cloudwatch-metrics.json
-  # cat aws-cloudwatch-metrics.json | jq '.Metrics | .[] | select(.Namespace == "AWS/Route53")'
+{% for healthcheck in pillar.monitor.healthcheck_list %}
   - namespace: AWS/Route53
-    name: prod--journal.elifesciences.org/status
+    name: {{ healthcheck.name }}
     regions:
       - us-east-1
     metrics:
@@ -15,5 +17,6 @@ static:
         length: 300 # seconds, 5 minutes
     dimensions:
       - name: HealthCheckId
-        value: 85f45d11-417f-439a-ba8e-cd2c65a0d051 # https://prod--journal.elifesciences.org:443/status
-
+        value: {{ healthcheck.id }}
+{% endfor %}
+{% endif %}

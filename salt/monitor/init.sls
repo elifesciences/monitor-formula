@@ -43,6 +43,7 @@ prometheus-rules-config:
     file.managed:
         - name: /etc/prometheus.rules-config.yml
         - source: salt://monitor/config/etc-prometheus.rules-config.yml
+        - template: jinja
 
     cmd.run:
         - name: /srv/prometheus/promtool check rules /etc/prometheus.rules-config.yml
