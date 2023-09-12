@@ -37,6 +37,12 @@ route:
             - 'env =~ "staging|continuumtest|continuumtestpreview|prod"'
           receiver: techalerts
 
+        # lsh@2023-09-12: temporary until I can figure out why 'custom_tag_environment' isn't being rewritten to 'env'
+        - matchers:
+            - "severity = critical"
+            - 'custom_tag_environment = "prod"'
+          receiver: techalerts
+
         # lsh@2023-09-06: lets ignore warnings for now and see if the inhibit rules help reduce the noise.
         # only send emails for warnings in the prod env.
         #- matchers:
