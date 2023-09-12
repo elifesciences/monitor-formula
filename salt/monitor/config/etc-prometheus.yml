@@ -35,6 +35,10 @@ scrape_configs:
           target_label: "env"
         - source_labels: ["tag_project"]
           target_label: "project"
+        # lsh@2023-09-12: temporary, until the 'environment' tag starts coming through
+        # - https://github.com/nerdswords/yet-another-cloudwatch-exporter/issues/1145
+        - source_labels: ["custom_tag_environment"]
+          target_label: "env"
 
 rule_files:
     - /etc/prometheus.rules-config.yml
