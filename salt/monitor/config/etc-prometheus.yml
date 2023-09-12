@@ -14,22 +14,27 @@ scrape_configs:
             secret_key: "{{ pillar.monitor.prometheus.ec2_sd_configs.secret_key }}"
             port: 9100
       relabel_configs:
-          - source_labels: ["__meta_ec2_tag_Name"] # annotations--continuumtest--1
+          # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#ec2_sd_config
+          - source_labels: ["__meta_ec2_tag_Name"]      # annotations--continuumtest--1
             target_label: "ec2_name"
-          - source_labels: ["__meta_ec2_tag_Project"] # annotations
-            target_label: "ec2_project"
+          - source_labels: ["__meta_ec2_tag_Project"]   # annotations
+            target_label: "project"
+          - source_labels: ["__meta_ec2_tag_Cluster"]   # annotations--continuumtest, aka 'stackname'
+            target_label: "project_instance"
           - source_labels: ["__meta_ec2_tag_Environment"] # continuumtest
-            target_label: "ec2_env"
+            target_label: "env"
           - source_labels: ["__meta_ec2_tag_Node"] # 1
             target_label: "ec2_node"
-          - source_labels: ["__meta_ec2_tag_Cluster"] # annotations--continuumtest
-            target_label: "ec2_cluster"
-      # also: instance type (t3.medium), instance state (stopped, running), availability zone (us-east-1d), region (us-east-1), ami, ...
 
     - job_name: "yace"
       static_configs:
         - targets:
             - "localhost:9097"
+      relabel_configs:
+        - source_labels: ["tag_env"]
+          target_label: "env"
+        - source_labels: ["tag_project"]
+          target_label: "project"
 
 rule_files:
     - /etc/prometheus.rules-config.yml

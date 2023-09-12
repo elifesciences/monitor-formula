@@ -34,14 +34,14 @@ route:
         # always send email for critical alerts in staging/prod envs.
         - matchers:
             - "severity = critical"
-            - 'ec2_env =~ "staging|continuumtest|continuumtestpreview|prod"'
+            - 'env =~ "staging|continuumtest|continuumtestpreview|prod"'
           receiver: techalerts
 
         # lsh@2023-09-06: lets ignore warnings for now and see if the inhibit rules help reduce the noise.
         # only send emails for warnings in the prod env.
         #- matchers:
         #    - "severity = warnings"
-        #    - 'ec2_env =~ "prod"'
+        #    - 'env =~ "prod"'
         #  receiver: techalerts
 
 # Inhibition rules allow to mute a set of alerts given that another alert is firing.

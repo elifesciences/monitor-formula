@@ -1,5 +1,10 @@
 apiVersion: v1alpha1
 sts-region: us-east-1
+exportedTagsOnMetrics:
+  route53:
+    #- Name         # healthcheck.id is used to target specific health checks
+    - Project       # journal, crm, etc
+    - Environment   # prod, etc
 {% if not pillar.monitor.healthcheck_list %}
 static: []
 {% else %}
