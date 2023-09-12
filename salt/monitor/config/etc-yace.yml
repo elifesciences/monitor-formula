@@ -1,27 +1,20 @@
 apiVersion: v1alpha1
 sts-region: us-east-1
-exportedTagsOnMetrics:
-  route53:
-    #- Name         # healthcheck.id is used to target specific health checks
-    - Project       # journal, crm, etc
-    - Environment   # prod, etc
-{% if not pillar.monitor.healthcheck_list %}
-static: []
-{% else %}
-static:
-{% for healthcheck in pillar.monitor.healthcheck_list %}
-  - namespace: AWS/Route53
-    name: {{ healthcheck.name }}
-    regions:
-      - us-east-1
-    metrics:
-      - name: HealthCheckPercentageHealthy
-        statistics:
-        - Average
-        period: 60 # seconds
-        length: 300 # seconds, 5 minutes
-    dimensions:
-      - name: HealthCheckId
-        value: {{ healthcheck.id }}
-{% endfor %}
-{% endif %}
+discovery:
+    exportedTagsOnMetrics:
+        route53:
+            - Name          # typically the url to be queried
+            - Project       # journal, crm, etc
+            - Environment   # prod, etc
+    jobs:
+      - type: AWS/Route53
+        regions:
+          - us-east-1
+        dimensionNameRequirements:
+            - HealthCheckId
+        metrics:
+          - name: HealthCheckPercentageHealthy
+            statistics:
+                - Average
+            period: 60 # seconds
+            length: 300 # seconds, 5 minutes
