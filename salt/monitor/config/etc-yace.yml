@@ -6,6 +6,9 @@ discovery:
             - Name          # typically the url to be queried
             - Project       # journal, crm, etc
             - Environment   # prod, etc
+            - name
+            - project
+            - environment
     jobs:
       - type: AWS/Route53
         regions:
