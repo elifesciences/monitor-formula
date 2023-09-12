@@ -15,6 +15,11 @@ discovery:
           - us-east-1
         dimensionNameRequirements:
             - HealthCheckId
+        # lsh@2023-09-12: temporary, until the tags on the healthchecks start coming through:
+        # - https://github.com/nerdswords/yet-another-cloudwatch-exporter/issues/1145
+        customTags:
+            - key: Environment
+              value: "prod"
         metrics:
           - name: HealthCheckPercentageHealthy
             statistics:

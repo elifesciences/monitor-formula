@@ -30,11 +30,11 @@ scrape_configs:
       static_configs:
         - targets:
             - "localhost:9097"
-      #relabel_configs:
-      #  - source_labels: ["tag_env"]
-      #    target_label: "env"
-      #  - source_labels: ["tag_project"]
-      #    target_label: "project"
+      relabel_configs:
+        - source_labels: ["tag_environment"]
+          target_label: "env"
+        - source_labels: ["tag_project"]
+          target_label: "project"
 
 rule_files:
     - /etc/prometheus.rules-config.yml
