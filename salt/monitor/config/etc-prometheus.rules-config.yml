@@ -3,7 +3,7 @@
 
 groups:
 {% if pillar.monitor.healthcheck_list %}
-    - name: "health checks" # 'synthetics' under NewRelic
+    - name: "health checks" # previously 'synthetics'
       rules:
 {% for healthcheck in pillar.monitor.healthcheck_list %}
         - alert: "{{ healthcheck.label }}"
