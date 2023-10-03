@@ -10,7 +10,9 @@ Group=alertmanager
 ExecStart=/srv/alertmanager/alertmanager \
     --cluster.listen-address= \
     --web.config.file=/etc/alertmanager.web-config.yml \
-    --web.listen-address=:9095 \
+    --web.external-url="http://localhost:9093/alertmanager/" \
+    --web.route-prefix="/" \
+    --web.listen-address=:9093 \
     --config.file=/etc/alertmanager.yml \
     --storage.path=/srv/alertmanager-data
 

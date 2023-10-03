@@ -333,26 +333,28 @@ yace-systemd-service:
 
 # nginx reverse proxy
 
-prometheus-nginx-proxy:
+monitor-nginx-proxy:
     file.managed:
-        - name: /etc/nginx/sites-enabled/prometheus.conf
-        - source: salt://monitor/config/etc-nginx-sites-enabled-prometheus.conf
+        - name: /etc/nginx/sites-enabled/monitor.conf
+        - source: salt://monitor/config/etc-nginx-sites-enabled-monitor.conf
         - template: jinja
+        - listen_in:
+            - service: nginx-server-service
+
+prometheus-nginx-proxy:
+    file.absent:
+        - name: /etc/nginx/sites-enabled/prometheus.conf
         - listen_in:
             - service: nginx-server-service
 
 grafana-nginx-proxy:
-    file.managed:
+    file.absent:
         - name: /etc/nginx/sites-enabled/grafana.conf
-        - source: salt://monitor/config/etc-nginx-sites-enabled-grafana.conf
-        - template: jinja
         - listen_in:
             - service: nginx-server-service
 
 alertmanager-nginx-proxy:
-    file.managed:
+    file.absent:
         - name: /etc/nginx/sites-enabled/alertmanager.conf
-        - source: salt://monitor/config/etc-nginx-sites-enabled-alertmanager.conf
-        - template: jinja
         - listen_in:
             - service: nginx-server-service
