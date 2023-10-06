@@ -37,7 +37,7 @@ discovery:
         - type: AWS/ELB
           regions:
               - us-east-1
-          dimensionNamerequirements:
+          dimensionNameRequirements:
               - LoadBalancerName
           # "Statistic period in seconds"
           period: 300   # seconds
