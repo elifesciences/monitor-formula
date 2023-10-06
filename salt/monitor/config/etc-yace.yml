@@ -9,6 +9,13 @@ discovery:
             - name
             - project
             - environment
+        elb:
+            - Name          # typically the url to be queried
+            - Project       # journal, crm, etc
+            - Environment   # prod, etc
+            - name
+            - project
+            - environment
     jobs:
         - type: AWS/Route53
           regions:
@@ -24,21 +31,21 @@ discovery:
               - name: HealthCheckPercentageHealthy
                 statistics:
                     - Average
-                period: 60
-                length: 600
+                period: 60  # seconds
+                length: 600 # seconds
 
         - type: AWS/ELB
           regions:
               - us-east-1
           dimensionNamerequirements:
               - LoadBalancerName
-          period: 1
-          length: 600
+          period: 600 # 1     # seconds
+          length: 600   # seconds, 10mins
           metrics:
               - name: Latency
                 statistics:
                     - Average
-                period: 10
+                period: 10 # seconds
               - name: RequestCount
                 statistics:
                     - Sum
