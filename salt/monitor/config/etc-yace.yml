@@ -10,19 +10,42 @@ discovery:
             - project
             - environment
     jobs:
-      - type: AWS/Route53
-        regions:
-          - us-east-1
-        dimensionNameRequirements:
-            - HealthCheckId
+        - type: AWS/Route53
+          regions:
+              - us-east-1
+          dimensionNameRequirements:
+              - HealthCheckId
         # lsh@2023-09-12: temporary, until the tags on the healthchecks start coming through:
         # - https://github.com/nerdswords/yet-another-cloudwatch-exporter/issues/1145
-        customTags:
-            - key: Environment
-              value: "prod"
-        metrics:
-          - name: HealthCheckPercentageHealthy
-            statistics:
-                - Average
-            period: 60 # seconds
-            length: 300 # seconds, 5 minutes
+          customTags:
+              - key: Environment
+                value: prod
+          metrics:
+              - name: HealthCheckPercentageHealthy
+                statistics:
+                    - Average
+                period: 60
+                length: 600
+
+        - type: AWS/ELB
+          regions:
+              - us-east-1
+          dimensionNamerequirements:
+              - LoadBalancerName
+          period: 1
+          length: 600
+          metrics:
+              - name: Latency
+                statistics:
+                    - Average
+                period: 10
+              - name: RequestCount
+                statistics:
+                    - Sum
+              - name: HTTPCode_Backend_2XX
+                statistics:
+                    - Sum
+              - name: HTTPCode_Backend_5XX
+                statistics:
+                    - Sum
+
