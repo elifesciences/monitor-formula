@@ -1,3 +1,9 @@
+external-volume-ready:
+    cmd.run:
+        - name: echo "/ext ready"
+        - require:
+            - resize-external-volume-if-needed
+
 # prometheus
 
 prometheus-user-group:
@@ -18,7 +24,7 @@ prometheus-installation:
         - source: https://github.com/prometheus/prometheus/releases/download/v2.46.0/prometheus-2.46.0.linux-amd64.tar.gz
         - source_hash: d2177ea21a6f60046f9510c828d4f8969628cfd35686780b3898917ef9c268b9
         - if_missing: /srv/prometheus
-        
+
     file.symlink:
         - name: /srv/prometheus
         - target: /srv/prometheus-2.46.0.linux-amd64
@@ -71,11 +77,12 @@ prometheus-web-config:
 
 prometheus-data-dir:
     file.directory:
-        - name: /srv/prometheus-data
+        - name: /ext/prometheus-data
         - user: prometheus
         - group: prometheus
         - require:
             - prometheus-user-group
+            - external-volume-ready
 
 prometheus-systemd-service:
     file.managed:
@@ -142,9 +149,12 @@ grafana-log-dir:
 
 grafana-data-dir:
     file.directory:
-        - name: /srv/grafana-data
+        - name: /ext/grafana-data
         - user: grafana
         - group: grafana
+        - require:
+            - grafana-user-group
+            - external-volume-ready
 
 grafana-config-dir:
     file.directory:
@@ -243,11 +253,12 @@ alertmanager-config:
 
 alertmanager-data-dir:
     file.directory:
-        - name: /srv/alertmanager-data
+        - name: /ext/alertmanager-data
         - user: alertmanager
         - group: alertmanager
         - require:
             - alertmanager-user-group
+            - external-volume-ready
 
 alertmanager-web-config:
     file.managed:

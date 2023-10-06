@@ -14,7 +14,7 @@ ExecStart=/srv/alertmanager/alertmanager \
     --web.route-prefix="/" \
     --web.listen-address=:9093 \
     --config.file=/etc/alertmanager.yml \
-    --storage.path=/srv/alertmanager-data
+    --storage.path=/ext/alertmanager-data
 
 Restart=always
 

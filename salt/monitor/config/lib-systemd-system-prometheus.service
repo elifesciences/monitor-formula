@@ -13,7 +13,7 @@ ExecStart=/srv/prometheus/prometheus \
     --web.external-url="http://localhost:9090/prometheus/" \
     --web.route-prefix="/" \
     --web.listen-address=localhost:9090 \
-    --storage.tsdb.path=/srv/prometheus-data \
+    --storage.tsdb.path=/ext/prometheus-data \
     --web.console.templates=/srv/prometheus/consoles \
     --web.console.libraries=/srv/prometheus/console_libraries
 
