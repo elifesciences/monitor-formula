@@ -39,13 +39,14 @@ discovery:
               - us-east-1
           dimensionNamerequirements:
               - LoadBalancerName
-          period: 600 # 1     # seconds
-          length: 600   # seconds, 10mins
+          # "Statistic period in seconds"
+          period: 300   # seconds
+          # "How far back to request data for in seconds"
+          length: 300   # seconds
           metrics:
               - name: Latency
                 statistics:
                     - Average
-                period: 10 # seconds
               - name: RequestCount
                 statistics:
                     - Sum
