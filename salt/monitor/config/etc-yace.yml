@@ -44,6 +44,7 @@ discovery:
           # "How far back to request data for in seconds"
           length: 300   # seconds
           metrics:
+              # "[HTTP listener] The total time elapsed, in seconds, from the time the load balancer sent the request to a registered instance until the instance started to send the response headers."
               - name: Latency
                 statistics:
                     - Average
