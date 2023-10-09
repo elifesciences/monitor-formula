@@ -1,3 +1,9 @@
+{%- if salt['elife.cfg']('cfn.outputs.DomainName') -%}
+{%- set external_url = "https://" + salt['elife.cfg']('project.full_hostname') -%}
+{% else %}
+{%- set external_url = "http://localhost" -%}
+{%- endif -%}
+
 external-volume-ready:
     cmd.run:
         - name: echo "/ext ready"
@@ -88,6 +94,9 @@ prometheus-systemd-service:
     file.managed:
         - name: /lib/systemd/system/prometheus.service
         - source: salt://monitor/config/lib-systemd-system-prometheus.service
+        - template: jinja
+        - defaults:
+            external_url: {{ external_url }}
 
     service.running:
         - name: prometheus
@@ -271,6 +280,8 @@ alertmanager-systemd-service:
         - name: /lib/systemd/system/alertmanager.service
         - source: salt://monitor/config/lib-systemd-system-alertmanager.service
         - template: jinja
+        - defaults:
+            external_url: {{ external_url }}
 
     service.running:
         - name: alertmanager
