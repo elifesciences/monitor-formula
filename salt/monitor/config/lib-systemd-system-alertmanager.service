@@ -1,3 +1,8 @@
+{%- if salt['elife.cfg']('cfn.outputs.DomainName') -%}
+{%- set external_url = "https://" + salt['elife.cfg']('project.full_hostname') -%}
+{% else %}
+{%- set external_url = "http://localhost" -%}
+{%- endif -%}
 [Unit]
 Description=Alert Manager
 Wants=network-online.target
@@ -10,7 +15,7 @@ Group=alertmanager
 ExecStart=/srv/alertmanager/alertmanager \
     --cluster.listen-address= \
     --web.config.file=/etc/alertmanager.web-config.yml \
-    --web.external-url="http://localhost:9093/alertmanager/" \
+    --web.external-url="{{ external_url }}/alertmanager/" \
     --web.route-prefix="/" \
     --web.listen-address=:9093 \
     --config.file=/etc/alertmanager.yml \

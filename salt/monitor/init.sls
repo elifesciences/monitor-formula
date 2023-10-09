@@ -270,6 +270,7 @@ alertmanager-systemd-service:
     file.managed:
         - name: /lib/systemd/system/alertmanager.service
         - source: salt://monitor/config/lib-systemd-system-alertmanager.service
+        - template: jinja
 
     service.running:
         - name: alertmanager
