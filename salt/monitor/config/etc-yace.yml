@@ -71,11 +71,12 @@ discovery:
               - us-east-1
           dimensionNameRequirements:
             - InstanceId
+          # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html#status-check-metrics
           metrics:
             - name: StatusCheckFailed_System # AWS problems, they'll typically send an email.
               statistics:
-                - Count # can we do this?
+                - Maximum
             - name: StatusCheckFailed_Instance # our problem, they'll typically not do anything
               statistics:
-                - Count
+                - Maximum
 
