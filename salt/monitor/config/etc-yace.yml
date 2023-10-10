@@ -16,6 +16,14 @@ discovery:
             - name
             - project
             - environment
+        ec2:
+            - Name          # typically the url to be queried
+            - Project       # journal, crm, etc
+            - Environment   # prod, etc
+            - name
+            - project
+            - environment
+
     jobs:
         - type: AWS/Route53
           regions:
@@ -57,4 +65,17 @@ discovery:
               - name: HTTPCode_Backend_5XX
                 statistics:
                     - Sum
+
+        - type: AWS/EC2
+          regions:
+              - us-east-1
+          dimensionNameRequirements:
+            - InstanceId
+          metrics:
+            - name: StatusCheckFailed_System # AWS problems, they'll typically send an email.
+              statistics:
+                - Count # can we do this?
+            - name: StatusCheckFailed_Instance # our problem, they'll typically not do anything
+              statistics:
+                - Count
 
