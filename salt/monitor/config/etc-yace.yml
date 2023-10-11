@@ -91,6 +91,14 @@ discovery:
               - name: HTTPCode_Target_5XX_Count
                 statistics:
                     - Sum
+
+        - type: AWS/ApplicationELB
+          regions:
+              - us-east-1
+          dimensionNameRequirements:
+              - LoadBalancer
+              - TargetGroup
+          metrics:
               - name: UnHealthyHostCount
                 statistics:
                     - Minimum
