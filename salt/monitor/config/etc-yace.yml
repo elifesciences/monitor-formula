@@ -65,6 +65,28 @@ discovery:
               - name: HTTPCode_Backend_5XX
                 statistics:
                     - Sum
+              - name: UnHealthyHostCount
+                statistics:
+                    - Maximum
+
+        - type: AWS/ApplicationELB
+          regions:
+              - us-east-1
+          dimensionNameRequirements:
+              - LoadBalancer
+          metrics:
+              - name: RequestCount
+                statistics:
+                    - Sum
+              - name: HTTPCode_Target_2XX_Count
+                statistics:
+                    - Sum
+              - name: HTTPCode_Target_5XX_Count
+                statistics:
+                    - Sum
+              - name: UnHealthyHostCount
+                statistics:
+                    - Maximum
 
         - type: AWS/EC2
           regions:
