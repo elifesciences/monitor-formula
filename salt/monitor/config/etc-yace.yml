@@ -96,8 +96,8 @@ discovery:
           regions:
               - us-east-1
           dimensionNameRequirements:
-              - LoadBalancer
               - TargetGroup
+              - LoadBalancer
           metrics:
               - name: UnHealthyHostCount
                 statistics:
