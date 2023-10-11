@@ -16,6 +16,13 @@ discovery:
             - name
             - project
             - environment
+        alb:
+            - Name          # typically the url to be queried
+            - Project       # journal, crm, etc
+            - Environment   # prod, etc
+            - name
+            - project
+            - environment
         ec2:
             - Name          # typically the url to be queried
             - Project       # journal, crm, etc
