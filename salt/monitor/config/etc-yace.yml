@@ -98,6 +98,8 @@ discovery:
           dimensionNameRequirements:
               - TargetGroup
               - LoadBalancer
+          period: 300
+          length: 300
           metrics:
               - name: UnHealthyHostCount
                 statistics:
