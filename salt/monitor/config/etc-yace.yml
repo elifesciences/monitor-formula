@@ -67,7 +67,7 @@ discovery:
                     - Sum
               - name: UnHealthyHostCount
                 statistics:
-                    - Maximum
+                    - Minimum
 
         - type: AWS/ApplicationELB
           regions:
@@ -86,7 +86,7 @@ discovery:
                     - Sum
               - name: UnHealthyHostCount
                 statistics:
-                    - Maximum
+                    - Minimum
 
         - type: AWS/EC2
           regions:
