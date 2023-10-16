@@ -19,8 +19,12 @@ monitor:
         # this is *not* the AWS secret key for the IAM user but a value derived from it.
         # see: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/smtp-credentials.html
         pass:
+        # email address to send alerts to by default
         receiver:
             email_to: bar@example.org
+        # email address to send alerts for experimental rules that need review first
+        experimental_receiver:
+            email_to: baz@example.org
 
     yace:
         aws:

@@ -16,6 +16,10 @@ receivers:
           - to: "{{ pillar.monitor.alertmanager.receiver.email_to }}"
             send_resolved: true
 
+    - name: experimental
+      email_configs:
+          - to: "{{ pillar.monitor.alertmanager.experimental_receiver.email_to }}"
+
 # root matcher, matches everything
 route:
     # "... a receiver configured so alerts that do not match any of the sub-routes are sent to someone."
@@ -31,6 +35,11 @@ route:
     repeat_interval: 24h
 
     routes:
+        # experimental alerts go to the experimental alert email receiver.
+        - matchers:
+            - "type = experimental"
+          receiver: experimental
+
         # always send email for critical alerts in staging/prod envs.
         - matchers:
             - "severity = critical"

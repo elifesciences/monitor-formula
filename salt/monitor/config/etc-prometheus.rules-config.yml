@@ -148,6 +148,7 @@ groups:
             expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
             for: 2m
             labels:
+                type: experimental
                 severity: warning
             annotations:
                 summary: Host disk will fill in 24 hours (instance {{ $labels.instance }})
@@ -157,6 +158,7 @@ groups:
             expr: (aws_ec2_status_check_failed_instance_maximum + on (name) group_left(tag_name) aws_ec2_info) > 0
             for: 2m
             labels:
+                type: experimental
                 severity: critical
             annotations:
                 summary: Host has failed one or more instance status checks. A restart is required.
@@ -166,11 +168,32 @@ groups:
             expr: (aws_ec2_status_check_failed_system_maximum + on (name) group_left(tag_name) aws_ec2_info) > 0
             for: 2m
             labels:
+                type: experimental
                 severity: critical
             annotations:
                 summary: Host has failed a system status check. A restart would probably solve this.
                 context: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-system-instance-status-check.html#instance-status-checks
 
+          # ELB
+          - alert: LoadBalancerUnhealthyNodes
+            expr: (aws_elb_un_healthy_host_count_minimum + on (name) group_left(tag_name) aws_elb_info{tag_environment="prod"}) > 0
+            for: 5m
+            labels:
+                type: experimental
+                severity: critical
+            annotations:
+                summary: One or more nodes in a load balancer is unhealthy. Unhealthy nodes are removed if they fail multiple health checks.
+                context: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-system-instance-status-check.html#instance-status-checks
 
+          # ALB
+          - alert: LoadBalancerUnhealthyNodes
+            expr: (aws_applicationelb_un_healthy_host_count_minimum + on (name) group_left(tag_name) aws_elb_info{tag_environment="prod"}) > 0
+            for: 5m
+            labels:
+                alert_type: experimental
+                severity: critical
+            annotations:
+                summary: One or more nodes in a load balancer is unhealthy. Unhealthy nodes are removed if they fail multiple health checks.
+                context: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-system-instance-status-check.html#instance-status-checks
 
 {% endraw %}
