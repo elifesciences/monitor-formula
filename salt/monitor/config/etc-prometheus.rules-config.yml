@@ -49,7 +49,7 @@ groups:
           # ---
 
           - alert: CPUUsageHigh
-            expr: (100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 70
+            expr: (100 - (avg by(ec2_name) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 70
             for: 10m
             labels:
                 severity: warning
@@ -57,7 +57,7 @@ groups:
                 summary: "CPU usage over 70% for 10mins: {{ $labels.ec2_name }}"
 
           - alert: CPUUsageHigh
-            expr: (100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 80
+            expr: (100 - (avg by(ec2_name) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 80
             for: 15m
             labels:
                 severity: critical
@@ -95,7 +95,7 @@ groups:
           # ---
 
           - alert: CPUStealHigh
-            expr: sum by (instance, cpu) (rate(node_cpu_seconds_total{mode="steal"} [2m])) > 20
+            expr: sum by (ec2_name, cpu) (rate(node_cpu_seconds_total{mode="steal"} [2m])) > 20
             for: 10m
             labels:
                 severity: critical
@@ -145,13 +145,13 @@ groups:
           # "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|run)($|/)".
           # Same rule using "node_filesystem_free_bytes" will fire when disk fills for non-root users.
           - alert: HostDiskWillFillIn24Hours
-            expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+            expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (ec2_name, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (ec2_name, device, mountpoint) node_filesystem_readonly == 0
             for: 2m
             labels:
                 type: experimental
                 severity: warning
             annotations:
-                summary: Host disk will fill in 24 hours (instance {{ $labels.instance }})
+                summary: Host disk will fill in 24 hours (instance {{ $labels.ec2_name }})
                 description: "Filesystem predicted to run out of space within the next 24 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
           - alert: HostInstanceStatusCheckFailed
