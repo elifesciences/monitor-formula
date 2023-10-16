@@ -176,7 +176,7 @@ groups:
 
           # ELB
           - alert: LoadBalancerUnhealthyNodes
-            expr: (aws_elb_un_healthy_host_count_minimum + on (name) group_left(tag_name) aws_elb_info{tag_environment="prod"}) > 0
+            expr: (aws_elb_un_healthy_host_count_maximum + on (name) group_left(tag_name) aws_elb_info{tag_environment="prod"}) > 0
             for: 5m
             labels:
                 type: experimental
@@ -187,7 +187,7 @@ groups:
 
           # ALB
           - alert: LoadBalancerUnhealthyNodes
-            expr: (aws_applicationelb_un_healthy_host_count_minimum + on (name) group_left(tag_name) aws_elb_info{tag_environment="prod"}) > 0
+            expr: (aws_applicationelb_un_healthy_host_count_maximum + on (name) group_left(tag_name) aws_elb_info{tag_environment="prod"}) > 0
             for: 5m
             labels:
                 alert_type: experimental
