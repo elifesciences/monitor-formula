@@ -74,7 +74,9 @@ discovery:
                     - Sum
               - name: UnHealthyHostCount
                 statistics:
-                    - Minimum
+                    - Maximum
+                period: 60
+                length: 3600
 
         - type: AWS/ApplicationELB
           regions:
@@ -98,12 +100,12 @@ discovery:
           dimensionNameRequirements:
               - TargetGroup
               - LoadBalancer
-          period: 300
-          length: 300
+          period: 60
+          length: 3600
           metrics:
               - name: UnHealthyHostCount
                 statistics:
-                    - Minimum
+                    - Maximum
 
         - type: AWS/EC2
           regions:
