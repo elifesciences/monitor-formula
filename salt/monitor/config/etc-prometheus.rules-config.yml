@@ -185,6 +185,15 @@ groups:
                 summary: One or more nodes in a load balancer is unhealthy. Unhealthy nodes are removed if they fail multiple health checks.
                 context: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-system-instance-status-check.html#instance-status-checks
 
+          - alert: LoadBalancerErrorPercentHigh
+            expr: (aws_elb_httpcode_backend_5_xx_sum / aws_elb_request_count_sum + on (name) group_left(tag_name) aws_elb_info) * 100 > 5
+            for: 5m
+            labels:
+                type: experimental
+                severity: critical
+            annotations:
+                summary: "The number of errors returned by the (classic) load balancer '{{ $labels.tag_name }}' is high (>5%)"
+
           # ALB
           - alert: LoadBalancerUnhealthyNodes
             expr: (aws_applicationelb_un_healthy_host_count_maximum + on (name) group_left(tag_name) aws_elb_info{tag_environment="prod"}) > 0
@@ -195,5 +204,14 @@ groups:
             annotations:
                 summary: One or more nodes in a load balancer is unhealthy. Unhealthy nodes are removed if they fail multiple health checks.
                 context: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-system-instance-status-check.html#instance-status-checks
+
+          - alert: LoadBalancerErrorPercentHigh
+            expr: (aws_applicationelb_httpcode_target_5_xx_count_sum / aws_applicationelb_request_count_sum + on (name) group_left(tag_name) aws_applicationelb_info) * 100 > 5
+            for: 5m
+            labels:
+                type: experimental
+                severity: critical
+            annotations:
+                summary: "The number of errors returned by the (application) load balancer '{{ $labels.tag_name }}' is high (>5%)"
 
 {% endraw %}
