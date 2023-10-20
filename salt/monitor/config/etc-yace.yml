@@ -122,33 +122,38 @@ discovery:
               statistics:
                 - Maximum
 
-        - type: AWS/SES
-          regions:
-            - us-east-1
-          dimensionNameRequirements: []
-          # fetch the last five minutes of data with one minute granularity
-          period: 60
-          length: 600
-          metrics:
-            - name: Send
-              statistics:
-                - Sum
-              nilToZero: true
-            - name: Delivery
-              statistics:
-                - Sum
-              nilToZero: true
-            # not present, it should be? https://docs.aws.amazon.com/ses/latest/dg/event-publishing-retrieving-cloudwatch.html
-            #- name: Reject
-            #  statistics:
-            #    - Sum
-            #  nilToZero: true
-            - name: Reputation.BounceRate # "Bounce" - also not present
-              statistics:
-                - Sum
-              nilToZero: true
-            - name: Reputation.ComplaintRate # "Complaint" -- also not present
-              statistics:
-                - Sum
-              nilToZero: true
+static:
+    - name: ses
+      namespace: AWS/SES
+      regions:
+        - us-east-1
+      # fetch the last five minutes of data with one minute granularity
+      period: 60
+      length: 600
+      metrics:
+        - name: Send
+          statistics:
+            - Sum
+          nilToZero: true
+        - name: Delivery
+          statistics:
+            - Sum
+          nilToZero: true
+        # not present, it should be? https://docs.aws.amazon.com/ses/latest/dg/event-publishing-retrieving-cloudwatch.html
+        #- name: Reject
+        #  statistics:
+        #    - Sum
+        #  nilToZero: true
+        - name: Bounce
+          statistics:
+            - Sum
+          nilToZero: true
+        - name: Reputation.BounceRate # "Bounce" - also not present
+          statistics:
+            - Sum
+          nilToZero: true
+        - name: Reputation.ComplaintRate # "Complaint" -- also not present
+          statistics:
+            - Sum
+          nilToZero: true
 
