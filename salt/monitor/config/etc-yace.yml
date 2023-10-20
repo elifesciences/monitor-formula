@@ -55,12 +55,13 @@ discovery:
           dimensionNameRequirements:
               - LoadBalancerName
           # "Statistic period in seconds"
-          period: 300   # seconds
+          period: 60   # seconds
           # "How far back to request data for in seconds"
-          length: 300   # seconds
+          length: 300   # five mins
           metrics:
               # "[HTTP listener] The total time elapsed, in seconds, from the time the load balancer sent the request to a registered instance until the instance started to send the response headers."
               - name: Latency
+                # todo: consider setting period from 300 seconds to 60 seconds
                 statistics:
                     - Average
               - name: RequestCount
@@ -76,7 +77,7 @@ discovery:
                 statistics:
                     - Maximum
                 period: 60
-                length: 3600
+                length: 3600 # one hour
 
         - type: AWS/ApplicationELB
           regions:
@@ -120,4 +121,25 @@ discovery:
             - name: StatusCheckFailed_Instance # our problem, they'll typically not do anything
               statistics:
                 - Maximum
+
+        - type: AWS/SES
+          regions:
+            - us-east-1
+          dimensionNameRequirements: []
+          # fetch the last three hours of data with one hour granularity
+          length: 10800
+          period: 3600
+          metrics:
+            - name: Send
+              statistics:
+                - Sum
+            - name: Reject
+              statistics:
+                - Sum
+            - name: Bounce
+              statistics:
+                - Sum
+            - name: Complaint
+              statistics:
+                - Sum
 
