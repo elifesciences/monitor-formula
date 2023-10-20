@@ -138,15 +138,16 @@ discovery:
               statistics:
                 - Sum
               nilToZero: true
-            - name: Reject
+            # not present, it should be? https://docs.aws.amazon.com/ses/latest/dg/event-publishing-retrieving-cloudwatch.html
+            #- name: Reject
+            #  statistics:
+            #    - Sum
+            #  nilToZero: true
+            - name: Reputation.BounceRate # "Bounce" - also not present
               statistics:
                 - Sum
               nilToZero: true
-            - name: Bounce
-              statistics:
-                - Sum
-              nilToZero: true
-            - name: Complaint
+            - name: Reputation.ComplaintRate # "Complaint" -- also not present
               statistics:
                 - Sum
               nilToZero: true
