@@ -214,4 +214,51 @@ groups:
             annotations:
                 summary: "The number of errors returned by the (application) load balancer '{{ $labels.tag_name }}' is high (>5%)"
 
+          # SES
+          - alert: SESBouncedEmail
+            expr: aws_ses_bounce_sum > 0
+            for: 5m
+            labels:
+                alert_type: experimental
+                severity: warning
+            annotations:
+                summary: SES email has bounced.
+
+          # todo: needs testing
+          - alert: SESBounceRateHigh
+            expr: aws_ses_reputation_bounce_rate_sum > 7.5
+            for: 5m
+            labels:
+                alert_type: experimental
+                severity: critical
+            annotations:
+                summary: SES emails has bounced.
+
+          - alert: SESComplaintRateHigh
+            expr: aws_ses_reputation_complaint_rate_sum > 0
+            for: 5m
+            labels:
+                alert_type: experimental
+                severity: critical
+            annotations:
+                summary: SES email has received a complaint.
+
+          - alert: SESDailySendCountHigh
+            expr: aws_ses_send_sum > 1000 # 50% of 2000, our daily limit
+            for: 5m
+            labels:
+                alert_type: experimental
+                severity: warning
+            annotations:
+                summary: SES emails has bounced.
+
+          - alert: SESDailySendCountHigh
+            expr: aws_ses_send_sum > 1500 # 75% of 2000, our daily limit
+            for: 5m
+            labels:
+                alert_type: experimental
+                severity: critical
+            annotations:
+                summary: SES emails has bounced.
+
 {% endraw %}
