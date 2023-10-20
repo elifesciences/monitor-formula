@@ -127,17 +127,18 @@ static:
       namespace: AWS/SES
       regions:
         - us-east-1
-      # fetch the last five minutes of data with one minute granularity
-      period: 60
-      length: 600
       metrics:
         - name: Send
           statistics:
             - Sum
+          period: 60
+          length: 600
           nilToZero: true
         - name: Delivery
           statistics:
             - Sum
+          period: 60
+          length: 600
           nilToZero: true
         # not present, it should be? https://docs.aws.amazon.com/ses/latest/dg/event-publishing-retrieving-cloudwatch.html
         #- name: Reject
@@ -147,13 +148,19 @@ static:
         - name: Bounce
           statistics:
             - Sum
+          period: 60
+          length: 600
           nilToZero: true
         - name: Reputation.BounceRate # "Bounce" - also not present
           statistics:
             - Sum
+          period: 60
+          length: 600
           nilToZero: true
         - name: Reputation.ComplaintRate # "Complaint" -- also not present
           statistics:
             - Sum
+          period: 60
+          length: 600
           nilToZero: true
 
