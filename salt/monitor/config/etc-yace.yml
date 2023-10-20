@@ -126,20 +126,28 @@ discovery:
           regions:
             - us-east-1
           dimensionNameRequirements: []
-          # fetch the last three hours of data with one hour granularity
-          length: 10800
-          period: 3600
+          # fetch the last five minutes of data with one minute granularity
+          period: 60
+          length: 600
           metrics:
             - name: Send
               statistics:
                 - Sum
+              nilToZero: true
+            - name: Delivery
+              statistics:
+                - Sum
+              nilToZero: true
             - name: Reject
               statistics:
                 - Sum
+              nilToZero: true
             - name: Bounce
               statistics:
                 - Sum
+              nilToZero: true
             - name: Complaint
               statistics:
                 - Sum
+              nilToZero: true
 
