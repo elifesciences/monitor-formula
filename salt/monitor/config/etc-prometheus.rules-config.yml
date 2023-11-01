@@ -264,8 +264,8 @@ groups:
           # RDS
 
           - alert: RDS Storage Low
-            expr: aws_rds_free_storage_space_average + on (name) group_left(tag_name) aws_rds_info < 2000000000
-            for: 2hr
+            expr: aws_rds_free_storage_space_minimum + on (name) group_left(tag_name) aws_rds_info < 2000000000
+            for: 2h
             labels:
                 severity: warning
             annotations:
@@ -273,8 +273,8 @@ groups:
                 description: "A 2GiB buffer is safe for most databases. Less than this for a long period and it may need to be increased."
 
           - alert: RDS Storage Low
-            expr: aws_rds_free_storage_space_average + on (name) group_left(tag_name) aws_rds_info < 2000000000
-            for: 12hr
+            expr: aws_rds_free_storage_space_minimum + on (name) group_left(tag_name) aws_rds_info < 2000000000
+            for: 12h
             labels:
                 severity: critical
             annotations:
@@ -282,7 +282,7 @@ groups:
                 description: "The size of the disk probably needs to be increased."
 
           - alert: RDS Connections Low in Prod
-            expr: aws_rds_database_connections_average + on (name) group_left(tag_name) aws_rds_info{tag_environment="prod",tag_name!~"elife-dashboard--prod|digests--prod"} < 1
+            expr: aws_rds_database_connections_maximum + on (name) group_left(tag_name) aws_rds_info{tag_environment="prod",tag_name!~"elife-dashboard--prod|digests--prod"} < 1
             for: 10m
             labels:
                 severity: warning
