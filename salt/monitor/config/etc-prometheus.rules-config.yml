@@ -138,7 +138,7 @@ groups:
             annotations:
                 summary: "Swap usage over 80% for 5m: {{ $labels.ec2_name }}"
 
-    - name: "new, experimental"
+    - name: "new/experimental"
       rules:
           # https://grafana.com/blog/2021/04/01/you-should-know-about...-these-useful-prometheus-alerting-rules/#alerts-for-use-and-red
           # Please add ignored mount points in node_exporter parameters like
@@ -224,7 +224,7 @@ groups:
             annotations:
                 summary: SES email has bounced.
 
-          # todo: needs testing
+          # todo: needs work
           - alert: SESBounceRateHigh
             expr: aws_ses_reputation_bounce_rate_sum > 7.5
             for: 5m
@@ -260,5 +260,34 @@ groups:
                 severity: critical
             annotations:
                 summary: SES emails has bounced.
+
+          # RDS
+
+          - alert: RDS Storage Low
+            expr: aws_rds_free_storage_space_average + on (name) group_left(tag_name) aws_rds_info < 2000000000
+            for: 2hr
+            labels:
+                severity: warning
+            annotations:
+                summary: "Disk space on RDS instance has been less than 2GiB for 2hrs: {{ $labels.tag_name }}"
+                description: "A 2GiB buffer is safe for most databases. Less than this for a long period and it may need to be increased."
+
+          - alert: RDS Storage Low
+            expr: aws_rds_free_storage_space_average + on (name) group_left(tag_name) aws_rds_info < 2000000000
+            for: 12hr
+            labels:
+                severity: critical
+            annotations:
+                summary: "Disk space on RDS instance has been less than 2GiB for 12hrs: {{ $labels.tag_name }}"
+                description: "The size of the disk probably needs to be increased."
+
+          - alert: RDS Connections Low in Prod
+            expr: aws_rds_database_connections_average + on (name) group_left(tag_name) aws_rds_info{tag_environment="prod",tag_name!~"elife-dashboard--prod|digests--prod"} < 1
+            for: 10m
+            labels:
+                severity: warning
+            annotations:
+                summary: "The number of database connections have been suspiciously low for 10mins: {{ $labels.tag_name }}"
+                description: "This may indicate the database, application or host(s) are down."
 
 {% endraw %}

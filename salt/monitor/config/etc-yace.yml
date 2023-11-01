@@ -140,37 +140,37 @@ discovery:
                 statistics:
                     - Average
                 period: 5
-                length: 300
+                length: 60
 
               - name: FreeableMemory
                 statistics:
                     - Average
                 period: 5
-                length: 300
+                length: 60
 
               - name: FreeStorageSpace
                 statistics:
-                    - Average
+                    - Minimum
                 period: 5
-                length: 300
+                length: 60
 
               - name: NetworkReceiveThroughput
                 statistics:
                     - Average
                 period: 5
-                length: 300
+                length: 60
 
               - name: NetworkTransmitThroughput
                 statistics:
                     - Average
                 period: 5
-                length: 300
+                length: 60
 
               - name: DatabaseConnections
                 statistics:
-                    - Average
+                    - Maximum
                 period: 5
-                length: 300
+                length: 60
 
 static:
     - name: ses
