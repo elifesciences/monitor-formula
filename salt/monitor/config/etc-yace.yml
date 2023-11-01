@@ -31,6 +31,14 @@ discovery:
             - project
             - environment
 
+        rds:
+            - Name          # typically the url to be queried
+            - Project       # journal, crm, etc
+            - Environment   # prod, etc
+            - name
+            - project
+            - environment
+
     jobs:
         - type: AWS/Route53
           regions:
@@ -121,6 +129,48 @@ discovery:
             - name: StatusCheckFailed_Instance # our problem, they'll typically not do anything
               statistics:
                 - Maximum
+
+        - type: AWS/RDS
+          regions:
+              - us-east-1
+          dimensionNameRequirements:
+              - DBInstanceIdentifier
+          metrics:
+              - name: CPUUtilization
+                statistics:
+                    - Average
+                period: 5
+                length: 300
+
+              - name: FreeableMemory
+                statistics:
+                    - Average
+                period: 5
+                length: 300
+
+              - name: FreeStorageSpace
+                statistics:
+                    - Average
+                period: 5
+                length: 300
+
+              - name: NetworkReceiveThroughput
+                statistics:
+                    - Average
+                period: 5
+                length: 300
+
+              - name: NetworkTransmitThroughput
+                statistics:
+                    - Average
+                period: 5
+                length: 300
+
+              - name: DatabaseConnections
+                statistics:
+                    - Average
+                period: 5
+                length: 300
 
 static:
     - name: ses
