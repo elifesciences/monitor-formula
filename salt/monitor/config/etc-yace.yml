@@ -150,7 +150,7 @@ discovery:
 
               - name: FreeStorageSpace
                 statistics:
-                    - Minimum
+                    - Average
                 period: 5
                 length: 60
 
