@@ -290,4 +290,22 @@ groups:
                 summary: "The number of database connections have been suspiciously low for 10mins: {{ $labels.tag_name }}"
                 description: "This may indicate the database, application or host(s) are down."
 
+          - alert: RDS Memory Low
+            expr: ((aws_rds_freeable_memory_average / 1024) / 1024) + on (name) group_left (tag_name) aws_rds_info{tag_environment="prod"} < 100
+            for: 30m
+            labels:
+                severity: warning
+            annotations:
+                summary: "The amount of freeable memory has been less than 100MB for 30m: {{ $labels.tag_name }}"
+                description: "The database is under sustained load. The workload or instance type may need to change."
+
+          - alert: RDS Memory Low
+            expr: ((aws_rds_freeable_memory_average / 1024) / 1024) + on (name) group_left (tag_name) aws_rds_info{tag_environment="prod"} < 100
+            for: 1h
+            labels:
+                severity: critical
+            annotations:
+                summary: "The amount of freeable memory has been less than 100MB for 1hr: {{ $labels.tag_name }}"
+                description: "The database is under sustained load. The workload or instance type needs to change."
+
 {% endraw %}
