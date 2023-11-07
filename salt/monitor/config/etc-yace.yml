@@ -145,8 +145,8 @@ discovery:
               - name: FreeableMemory
                 statistics:
                     - Average
-                period: 5
-                length: 60
+                period: 60
+                length: 300
 
               - name: FreeStorageSpace
                 statistics:
