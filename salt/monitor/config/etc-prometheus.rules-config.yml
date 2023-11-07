@@ -39,7 +39,7 @@ groups:
 
           - alert: DiskUsageHigh
             expr: (100 - ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes)) > 80
-            for: 5m
+            for: 20m
             labels:
                 severity: critical
             annotations:
