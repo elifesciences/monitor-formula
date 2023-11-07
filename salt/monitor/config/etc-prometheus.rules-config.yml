@@ -281,15 +281,6 @@ groups:
                 summary: "Disk space on RDS instance has been less than 2GiB for 12hrs: {{ $labels.tag_name }}"
                 description: "The size of the disk probably needs to be increased."
 
-          - alert: RDS Connections Low in Prod
-            expr: aws_rds_database_connections_maximum + on (name) group_left(tag_name) aws_rds_info{tag_environment="prod",tag_name!~"elife-dashboard--prod|digests--prod"} < 1
-            for: 10m
-            labels:
-                severity: warning
-            annotations:
-                summary: "The number of database connections have been suspiciously low for 10mins: {{ $labels.tag_name }}"
-                description: "This may indicate the database, application or host(s) are down."
-
           - alert: RDS Memory Low
             expr: ((aws_rds_freeable_memory_average / 1024) / 1024) + on (name) group_left (tag_name) aws_rds_info{tag_environment="prod"} < 100
             for: 30m
@@ -297,7 +288,7 @@ groups:
                 severity: warning
             annotations:
                 summary: "The amount of freeable memory has been less than 100MB for 30m: {{ $labels.tag_name }}"
-                description: "The database is under sustained load. The workload or instance type may need to change."
+                description: "The database is low on memory. The workload or instance type may need to change."
 
           - alert: RDS Memory Low
             expr: ((aws_rds_freeable_memory_average / 1024) / 1024) + on (name) group_left (tag_name) aws_rds_info{tag_environment="prod"} < 100
@@ -306,6 +297,26 @@ groups:
                 severity: critical
             annotations:
                 summary: "The amount of freeable memory has been less than 100MB for 1hr: {{ $labels.tag_name }}"
-                description: "The database is under sustained load. The workload or instance type needs to change."
+                description: "The database is low on memory. The workload or instance type needs to change."
+
+          - alert: RDS CPU Usage High
+            expr: aws_rds_cpuutilization_average + on (name) group_left (tag_name) aws_rds_info > 70
+            for: 10m
+            labels:
+                severity: warning
+            annotations:
+                summary: "RDS CPU usage over 70% for 10mins: {{ $labels.tag_name }}"
+                description: "The database is under load. The workload or instance type may need to change."
+
+          - alert: RDS CPU Usage High
+            expr: aws_rds_cpuutilization_average + on (name) group_left (tag_name) aws_rds_info > 80
+            for: 15m
+            labels:
+                severity: critical
+            annotations:
+                summary: "RDS CPU usage over 80% for 15mins: {{ $labels.tag_name }}"
+                description: "The database is under load. The workload or instance type may need to change."
+
+
 
 {% endraw %}
