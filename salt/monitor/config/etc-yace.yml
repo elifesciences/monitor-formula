@@ -166,11 +166,16 @@ discovery:
                 period: 5
                 length: 60
 
-              - name: DatabaseConnections
-                statistics:
-                    - Maximum
-                period: 5
-                length: 60
+              # lsh@2023-11-07: disabled. this data is suspect and I can't create a useful alert from it.
+              # If it were counting *new* connections rather *active* connections it would make more sense,
+              # a connection pool is established for example and all traffic reuses the same conn.
+              # The docs have a handful of their own reasons why this data isn't great:
+              # - https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-metrics.html
+              #- name: DatabaseConnections
+              #  statistics:
+              #      - Maximum
+              #  period: 5
+              #  length: 60
 
 static:
     - name: ses
