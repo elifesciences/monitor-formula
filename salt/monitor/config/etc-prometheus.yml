@@ -21,7 +21,7 @@ scrape_configs:
             secret_key: "{{ pillar.monitor.prometheus.ec2_sd_configs.secret_key }}"
             port: 1234
             filters:
-              - name: tag:project
+              - name: tag:Project
                 values:
                   - bioprotocol
                   #- lax
