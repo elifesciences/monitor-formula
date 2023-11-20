@@ -224,7 +224,7 @@ groups:
             annotations:
                 summary: SES email has bounced.
 
-          # todo: needs work
+          ## todo: needs work
           - alert: SESBounceRateHigh
             expr: aws_ses_reputation_bounce_rate_sum > 7.5
             for: 5m
@@ -317,6 +317,19 @@ groups:
                 summary: "RDS CPU usage over 80% for 15mins: {{ $labels.tag_name }}"
                 description: "The database is under load. The workload or instance type may need to change."
 
-
+          # caddy web server
+          - alert: APDEX Low
+            expr: |
+                ((
+                  sum(rate(caddy_http_request_duration_seconds_bucket{le="0.25", env="prod"}[5m])) by (ec2_name)
+                +
+                  sum(rate(caddy_http_request_duration_seconds_bucket{le="1.0", env="prod"}[5m])) by (ec2_name)
+                ) / 2 / sum(rate(caddy_http_request_duration_seconds_count{env="prod"}[5m])) by (ec2_name)) < 0.9
+            for: 5m
+            labels:
+                severity: critical
+            annotations:
+                summary: "APDEX less than 0.9 for 5mins: {{ $labels.ec2_name }}"
+                description: "Overall webserver response times are taking too long to complete."
 
 {% endraw %}
