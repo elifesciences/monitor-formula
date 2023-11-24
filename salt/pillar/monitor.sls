@@ -37,3 +37,8 @@ monitor:
           id: 1234-5678-91011 # AWS Route53 health check ID
           duration: 5m
           description: "Health check for foo has been less than 100% for 1 minute."
+
+    grafana:
+        admin_user:
+            password: asdfasdfasdf
+        secret_key: asdfasdfasdf

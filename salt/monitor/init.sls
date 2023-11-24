@@ -175,10 +175,14 @@ grafana-provisioning-config-dir:
         - require:
             - grafana-config-dir
 
+
+# sudo -u grafana ./bin/grafana cli --config /etc/grafana/grafana.ini admin reset-admin-password foobarbaz
+
 grafana-env-config:
     file.managed:
         - name: /etc/grafana/grafana-server.env
         - source: salt://monitor/config/etc-grafana-grafana-server.env
+        - template: jinja
         - require:
             - grafana-config-dir
 
@@ -186,6 +190,7 @@ grafana-ini-config:
     file.managed:
         - name: /etc/grafana/grafana.ini
         - source: salt://monitor/config/etc-grafana-grafana.ini
+        - template: jinja
         - require:
             - grafana-config-dir
 
