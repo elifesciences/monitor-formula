@@ -42,3 +42,8 @@ monitor:
         admin_user:
             password: asdfasdfasdf
         secret_key: asdfasdfasdf
+        auth:
+            github:
+                enabled: false
+                client_id: asdfasdfasd
+                client_secret: asdfsadfasdf
