@@ -194,6 +194,31 @@ grafana-ini-config:
         - require:
             - grafana-config-dir
 
+grafana-plugins-dir:
+    file.directory:
+        - name: /var/lib/grafana/plugins
+        - user: grafana
+        - group: grafana
+        - makedirs: true
+
+{% for plugin, plugin_version in pillar.monitor.grafana.plugins.items() %}
+grafana-plugin {{ plugin }}:
+    cmd.run:
+        - runas: grafana
+        - cwd: /srv/grafana
+        - name: ./bin/grafana cli --config /etc/grafana/grafana.ini plugins install {{ plugin }} {{ plugin_version }}
+        - require:
+            - grafana-plugins-dir
+            - grafana-ini-config
+            - grafana-ownership
+        - require_in:
+            - cmd: grafana-plugins-installed
+{% endfor %}
+
+grafana-plugins-installed:
+    cmd.run:
+        - name: echo "grafana plugins installed"
+
 grafana-systemd-service:
     file.managed:
         - name: /lib/systemd/system/grafana.service
@@ -205,6 +230,7 @@ grafana-systemd-service:
         - watch:
             - grafana-ini-config
             - grafana-env-config
+            - grafana-plugins-installed
         - require:
             - file: grafana-systemd-service
             - grafana-installation
@@ -212,6 +238,7 @@ grafana-systemd-service:
             - grafana-env-config
             - grafana-ini-config
             - grafana-log-dir
+            - grafana-plugins-installed
 
 # AlertManager
 

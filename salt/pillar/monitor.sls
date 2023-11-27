@@ -54,4 +54,7 @@ monitor:
             #user:
             #password:
             #from_address:
-
+        plugins: {}
+            # "Rendering images requires a lot of memory, mainly because Grafana creates browser instances in the background for the actual rendering. We recommend a minimum of 16GB of free memory on the system rendering images."
+            # are they serious???
+            #grafana-image-renderer: 3.84
