@@ -47,3 +47,11 @@ monitor:
                 enabled: false
                 client_id: asdfasdfasd
                 client_secret: asdfsadfasdf
+        smtp:
+            enabled: false
+            # these values use alertmanager
+            #host:
+            #user:
+            #password:
+            #from_address:
+
