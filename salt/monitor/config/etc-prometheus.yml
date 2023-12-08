@@ -24,6 +24,7 @@ scrape_configs:
               - name: tag:Project
                 values:
                   - bioprotocol
+                  - api-gateway
                   #- lax
                   #- journal
                   #- foo
