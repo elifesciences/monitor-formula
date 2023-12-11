@@ -102,6 +102,9 @@ discovery:
               - name: HTTPCode_Target_5XX_Count
                 statistics:
                     - Sum
+              - name: TargetResponseTime
+                statistics:
+                    - Average
 
         - type: AWS/ApplicationELB
           regions:
