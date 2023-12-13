@@ -19,7 +19,7 @@ groups:
     - name: "infrastructure"
       rules:
           - alert: HostNotReporting # if you change this alert name also update AlertManager routing rules
-            expr: up == 0
+            expr: up{job="aws-ec2"} == 0
             for: 5m
             labels:
                 severity: critical

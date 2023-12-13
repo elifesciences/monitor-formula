@@ -7,15 +7,27 @@ scrape_configs:
           username: "{{ pillar.monitor.prometheus.web.username }}"
           password: "{{ pillar.monitor.prometheus.web.password }}"
 
-    - job_name: "aws-ec2"
+    - job_name: "aws-ec2" # node-exporter
       ec2_sd_configs:
-          # node_exporter
           - region: us-east-1
             access_key: "{{ pillar.monitor.prometheus.ec2_sd_configs.access_key }}"
             secret_key: "{{ pillar.monitor.prometheus.ec2_sd_configs.secret_key }}"
             port: 9100
+      relabel_configs:
+          # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#ec2_sd_config
+          - source_labels: ["__meta_ec2_tag_Name"]      # annotations--continuumtest--1
+            target_label: "ec2_name"
+          - source_labels: ["__meta_ec2_tag_Project"]   # annotations
+            target_label: "project"
+          - source_labels: ["__meta_ec2_tag_Cluster"]   # annotations--continuumtest, aka 'stackname'
+            target_label: "project_instance"
+          - source_labels: ["__meta_ec2_tag_Environment"] # continuumtest
+            target_label: "env"
+          - source_labels: ["__meta_ec2_tag_Node"] # 1
+            target_label: "ec2_node"
 
-          # caddy
+    - job_name: "caddy"
+      ec2_sd_configs:
           - region: us-east-1
             access_key: "{{ pillar.monitor.prometheus.ec2_sd_configs.access_key }}"
             secret_key: "{{ pillar.monitor.prometheus.ec2_sd_configs.secret_key }}"
@@ -29,7 +41,6 @@ scrape_configs:
                   #- journal
                   #- foo
                   #- bar
-
       relabel_configs:
           # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#ec2_sd_config
           - source_labels: ["__meta_ec2_tag_Name"]      # annotations--continuumtest--1
