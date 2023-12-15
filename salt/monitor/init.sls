@@ -19,10 +19,18 @@ prometheus-user-group:
     user.present:
         - name: prometheus
         - shell: /bin/false
+        - createhome: false
         - groups:
             - prometheus
         - require:
             - group: prometheus
+
+# lsh@2023-12-15: temporary, once all instances no longer have such dir
+prometheus-home-absent:
+    file.absent:
+        - name: /home/prometheus
+        - require:
+            - prometheus-user-group
 
 prometheus-installation:
     archive.extracted:
@@ -120,10 +128,18 @@ grafana-user-group:
     user.present:
         - name: grafana
         - shell: /bin/false
+        - createhome: false
         - groups:
             - grafana
         - require:
             - group: grafana
+
+# lsh@2023-12-15: temporary, once all instances no longer have such dir
+grafana-home-absent:
+    file.absent:
+        - name: /home/grafana
+        - require:
+            - grafana-user-group
 
 grafana-installation:
     archive.extracted:
@@ -249,10 +265,18 @@ alertmanager-user-group:
     user.present:
         - name: alertmanager
         - shell: /bin/false
+        - createhome: false
         - groups:
             - alertmanager
         - require:
             - group: alertmanager
+
+# lsh@2023-12-15: temporary, once all instances no longer have such dir
+alertmanager-home-absent:
+    file.absent:
+        - name: /home/alertmanager
+        - require:
+            - alertmanager-user-group
 
 alertmanager-installation:
     archive.extracted:
@@ -337,10 +361,18 @@ yace-user-group:
     user.present:
         - name: yace
         - shell: /bin/false
+        - createhome: false
         - groups:
             - yace
         - require:
             - group: yace
+
+# lsh@2023-12-15: temporary, once all instances no longer have such dir
+yace-home-absent:
+    file.absent:
+        - name: /home/yace
+        - require:
+            - yace-user-group
 
 yace-installation:
     archive.extracted:
