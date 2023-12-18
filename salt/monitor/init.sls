@@ -192,7 +192,7 @@ grafana-provisioning-config-dir:
             - grafana-config-dir
 
 
-# sudo -u grafana ./bin/grafana cli --config /etc/grafana/grafana.ini admin reset-admin-password foobarbaz
+# sudo -u grafana ./bin/grafana cli --config /etc/grafana/grafana.ini --pluginsDir "/ext/grafana-data/plugins/" admin reset-admin-password foobarbaz
 
 grafana-env-config:
     file.managed:
