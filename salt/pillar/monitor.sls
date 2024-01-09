@@ -12,6 +12,10 @@ monitor:
             access_key: AKIAFOOBAR
             secret_key: asdfasdfasdf
 
+        # https://prometheus.io/docs/prometheus/latest/storage/#operational-aspects
+        storage:
+            retention_time: 30d # 30 days, default is 15 days. increasing affects cpu, ram and disk.
+
     alertmanager:
         smtp: email-smtp.us-east-1.amazonaws.com:587 # SES throttles port 25
         from: no-reply@example.org

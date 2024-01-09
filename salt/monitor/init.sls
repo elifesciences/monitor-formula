@@ -105,6 +105,7 @@ prometheus-systemd-service:
         - template: jinja
         - defaults:
             external_url: {{ external_url }}
+            retention_time: {{ pillar.monitor.prometheus.storage.retention_time }}
 
     service.running:
         - name: prometheus
