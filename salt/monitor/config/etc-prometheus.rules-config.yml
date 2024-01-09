@@ -139,7 +139,7 @@ groups:
                 summary: "Swap usage over 80% for 5m: {{ $labels.ec2_name }}"
 
           - alert: HostInstanceStatusCheckFailed
-            expr: (aws_ec2_status_check_failed_instance_maximum + on (name) group_left(tag_name) aws_ec2_info) > 0
+            expr: (aws_ec2_status_check_failed_instance_maximum + on (name) group_left(tag_name) aws_ec2_info{tag_environment!~"flux.+"}) > 0
             for: 2m
             labels:
                 type: experimental
