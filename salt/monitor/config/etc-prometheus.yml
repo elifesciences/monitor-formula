@@ -38,6 +38,7 @@ scrape_configs:
                   - bioprotocol
                   - api-gateway
                   - search
+                  - redirects
                   #- lax
                   #- journal
                   #- foo
