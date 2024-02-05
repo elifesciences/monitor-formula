@@ -39,6 +39,7 @@ scrape_configs:
                   - api-gateway
                   - search
                   - redirects
+                  - api-dummy
                   #- lax
                   #- journal
                   #- foo
