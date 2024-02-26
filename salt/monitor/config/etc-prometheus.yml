@@ -43,6 +43,7 @@ scrape_configs:
                   - personalised-covers
                   - observer
                   - elife-metrics
+                  - elife-dashboard
                   #- lax
                   #- journal
                   #- foo
