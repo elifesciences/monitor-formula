@@ -42,6 +42,7 @@ scrape_configs:
                   - api-dummy
                   - personalised-covers
                   - observer
+                  - elife-metrics
                   #- lax
                   #- journal
                   #- foo
