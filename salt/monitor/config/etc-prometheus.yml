@@ -45,6 +45,7 @@ scrape_configs:
                   - elife-metrics
                   - elife-dashboard
                   - recommendations
+                  - annotations
                   #- lax
                   #- journal
                   #- foo
