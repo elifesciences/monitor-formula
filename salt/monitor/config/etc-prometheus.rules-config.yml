@@ -262,7 +262,7 @@ groups:
                 summary: SES emails has bounced.
 
           - alert: SESComplaintRateHigh
-            expr: aws_ses_reputation_complaint_rate_sum > 0
+            expr: aws_ses_reputation_complaint_rate_sum > 1
             for: 5m
             labels:
                 type: experimental
