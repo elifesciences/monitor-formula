@@ -183,7 +183,7 @@ groups:
             expr: (aws_applicationelb_un_healthy_host_count_maximum + on (name) group_left(tag_name) aws_elb_info{tag_environment="prod"}) > 0
             for: 5m
             labels:
-                alert_type: experimental
+                type: experimental
                 severity: critical
             annotations:
                 summary: One or more nodes in a load balancer is unhealthy. Unhealthy nodes are removed if they fail multiple health checks.
@@ -246,7 +246,7 @@ groups:
             expr: aws_ses_bounce_sum > 0
             for: 5m
             labels:
-                alert_type: experimental
+                type: experimental
                 severity: warning
             annotations:
                 summary: SES email has bounced.
@@ -256,7 +256,7 @@ groups:
             expr: aws_ses_reputation_bounce_rate_sum > 7.5
             for: 5m
             labels:
-                alert_type: experimental
+                type: experimental
                 severity: critical
             annotations:
                 summary: SES emails has bounced.
@@ -265,7 +265,7 @@ groups:
             expr: aws_ses_reputation_complaint_rate_sum > 0
             for: 5m
             labels:
-                alert_type: experimental
+                type: experimental
                 severity: critical
             annotations:
                 summary: SES email has received a complaint.
@@ -274,7 +274,7 @@ groups:
             expr: aws_ses_send_sum > 1000 # 50% of 2000, our daily limit
             for: 5m
             labels:
-                alert_type: experimental
+                type: experimental
                 severity: warning
             annotations:
                 summary: SES emails has bounced.
@@ -283,7 +283,7 @@ groups:
             expr: aws_ses_send_sum > 1500 # 75% of 2000, our daily limit
             for: 5m
             labels:
-                alert_type: experimental
+                type: experimental
                 severity: critical
             annotations:
                 summary: SES emails has bounced.
