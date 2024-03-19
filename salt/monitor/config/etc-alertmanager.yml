@@ -46,6 +46,11 @@ route:
             - 'env =~ "staging|continuumtest|continuumtestpreview|prod"'
           receiver: techalerts
 
+        - matchers:
+            - "severity = critical"
+            - 'tag_environment =~ "staging|continuumtest|continuumtestpreview|prod"'
+          receiver: experimental # temporary until I find out why
+
         # lsh@2023-09-12: temporary until I can figure out why 'custom_tag_environment' isn't being rewritten to 'env'
         - matchers:
             - "severity = critical"
