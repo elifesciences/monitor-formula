@@ -47,6 +47,7 @@ scrape_configs:
                   - recommendations
                   - annotations
                   - elife-alfred
+                  - digests
                   #- lax
                   #- journal
                   #- foo
