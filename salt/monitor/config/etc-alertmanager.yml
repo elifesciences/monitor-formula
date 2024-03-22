@@ -43,19 +43,24 @@ route:
         # always send email for critical alerts in staging/prod envs.
         - matchers:
             - "severity = critical"
-            - 'env =~ "staging|continuumtest|continuumtestpreview|prod"'
           receiver: techalerts
 
-        - matchers:
-            - "severity = critical"
-            - 'tag_environment =~ "staging|continuumtest|continuumtestpreview|prod"'
-          receiver: experimental # temporary until I find out why
-
-        # lsh@2023-09-12: temporary until I can figure out why 'custom_tag_environment' isn't being rewritten to 'env'
-        - matchers:
-            - "severity = critical"
-            - 'custom_tag_environment = "prod"'
-          receiver: techalerts
+        # lsh@2024-03-22: env matcher removed. too many checks don't surface an 'env' field and
+        # label rewriting doesn't seem to have an effect.
+        #
+        # always send email for critical alerts in staging/prod envs.
+        #- matchers:
+        #    - "severity = critical"
+        #    - 'env =~ "staging|continuumtest|continuumtestpreview|prod"'
+        #  receiver: techalerts
+        #- matchers:
+        #    - "severity = critical"
+        #    - 'tag_environment =~ "staging|continuumtest|continuumtestpreview|prod"'
+        #  receiver: experimental # temporary until I find out why
+        #- matchers:
+        #    - "severity = critical"
+        #    - 'custom_tag_environment = "prod"'
+        #  receiver: techalerts
 
         # lsh@2023-09-06: lets ignore warnings for now and see if the inhibit rules help reduce the noise.
         # only send emails for warnings in the prod env.
