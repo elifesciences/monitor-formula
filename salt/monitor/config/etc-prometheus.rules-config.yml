@@ -49,7 +49,7 @@ groups:
           # ---
 
           - alert: CPUUsageHigh
-            expr: (100 - (avg by(ec2_name) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 70
+            expr: (100 - (avg by(ec2_name, env) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 70
             for: 10m
             labels:
                 severity: warning
@@ -57,7 +57,7 @@ groups:
                 summary: "CPU usage over 70% for 10mins: {{ $labels.ec2_name }}"
 
           - alert: CPUUsageHigh
-            expr: (100 - (avg by(ec2_name) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 80
+            expr: (100 - (avg by(ec2_name, env) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 80
             for: 15m
             labels:
                 severity: critical
