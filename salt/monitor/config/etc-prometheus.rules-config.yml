@@ -202,7 +202,7 @@ groups:
           - alert: APDEX Low
             expr: |
                 ((
-                  sum(rate(caddy_http_request_duration_seconds_bucket{le="0.25", env="prod"}[5m])) by (ec2_name)
+                  sum(rate(caddy_http_request_duration_seconds_bucket{le="0.25", env="prod", project_instance!="recommendations--prod"}[5m])) by (ec2_name)
                 +
                   sum(rate(caddy_http_request_duration_seconds_bucket{le="1.0", env="prod"}[5m])) by (ec2_name)
                 ) / 2 / sum(rate(caddy_http_request_duration_seconds_count{env="prod"}[5m])) by (ec2_name)) < 0.9
