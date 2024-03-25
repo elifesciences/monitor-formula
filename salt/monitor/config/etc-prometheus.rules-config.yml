@@ -220,7 +220,6 @@ groups:
                 sum(rate(caddy_http_request_duration_seconds_count{env="prod"}[5m])) by (ec2_name)) > 0.5
             for: 5m
             labels:
-                type: experimental
                 severity: critical
             annotations:
                 summary: "The number of HTTP 5xx responses returned by the application is high (>5%): {{ $labels.ec2_name }}"
