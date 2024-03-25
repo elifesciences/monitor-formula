@@ -302,7 +302,7 @@ groups:
                 description: "A 2GiB buffer is safe for most databases. Less than this for a long period and it may need to be increased."
 
           - alert: RDS Storage Low
-            expr: ((aws_rds_free_storage_space_average / 1024) / 1024) + on (name) group_left (tag_name) aws_rds_info < 2000
+            expr: ((aws_rds_free_storage_space_average / 1024) / 1024) + on (name) group_left (tag_name) aws_rds_info{tag_environment="prod"} < 2000
             for: 12h
             labels:
                 severity: critical
