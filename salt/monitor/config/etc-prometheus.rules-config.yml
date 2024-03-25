@@ -242,24 +242,29 @@ groups:
                 description: "Filesystem predicted to run out of space within the next 24 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
           # SES
-          - alert: SESBouncedEmail
-            expr: aws_ses_bounce_sum > 0
-            for: 5m
-            labels:
-                type: experimental
-                severity: warning
-            annotations:
-                summary: SES email has bounced.
+          
+          # lsh@2024-03-25: disabled, ses email can originate from a number of different locations and 
+          # it's doubtful if anyone is investigating or monitoring bounces.
+          # instead, rely on the SESBounceRateHigh alert
+          #- alert: SESBouncedEmail
+          #  expr: aws_ses_bounce_sum > 1
+          #  for: 5m
+          #  labels:
+          #      type: experimental
+          #      severity: warning
+          #  annotations:
+          #      summary: SES email has bounced.
 
           ## todo: needs work
           - alert: SESBounceRateHigh
-            expr: aws_ses_reputation_bounce_rate_sum > 7.5
+            expr: aws_ses_reputation_bounce_rate_sum > 5.0
             for: 5m
             labels:
                 type: experimental
                 severity: critical
             annotations:
-                summary: SES emails has bounced.
+                summary: SES email is bouncing.
+                description: The bounce rate of email sent by SES is high. AWS may suspend account if bounce rate exceeds 10%.
 
           - alert: SESComplaintRateHigh
             expr: aws_ses_reputation_complaint_rate_sum > 1
