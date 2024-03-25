@@ -194,6 +194,7 @@ grafana-provisioning-config-dir:
 
 
 # sudo -u grafana ./bin/grafana cli --config /etc/grafana/grafana.ini --pluginsDir "/ext/grafana-data/plugins/" admin reset-admin-password foobarbaz
+# sudo -u grafana ./bin/grafana cli admin reset-admin-password foobarbaz --config /etc/grafana/grafana.ini --pluginsDir "/ext/grafana-data/plugins/"
 
 grafana-env-config:
     file.managed:
@@ -419,30 +420,27 @@ yace-systemd-service:
             - yace-installation
             - yace-config
 
-# nginx reverse proxy
 
-monitor-nginx-proxy:
+{% if pillar.elife.webserver.app == "caddy" %}
+monitor-vhost:
+    file.managed:
+        - name: /etc/caddy/sites.d/monitor
+        - source: salt://monitor/config/etc-caddy-sites.d-monitor
+        - template: jinja
+        - require:
+            - caddy-config
+        - require_in:
+            - cmd: caddy-validate-config
+        - listen_in:
+            - service: caddy-server-service
+
+{% else %}
+
+monitor-vhost:
     file.managed:
         - name: /etc/nginx/sites-enabled/monitor.conf
         - source: salt://monitor/config/etc-nginx-sites-enabled-monitor.conf
         - template: jinja
         - listen_in:
             - service: nginx-server-service
-
-prometheus-nginx-proxy:
-    file.absent:
-        - name: /etc/nginx/sites-enabled/prometheus.conf
-        - listen_in:
-            - service: nginx-server-service
-
-grafana-nginx-proxy:
-    file.absent:
-        - name: /etc/nginx/sites-enabled/grafana.conf
-        - listen_in:
-            - service: nginx-server-service
-
-alertmanager-nginx-proxy:
-    file.absent:
-        - name: /etc/nginx/sites-enabled/alertmanager.conf
-        - listen_in:
-            - service: nginx-server-service
+{% endif %}

@@ -1,0 +1,43 @@
+(config) {
+
+    log {
+        output file /var/log/caddy/access.log
+        format json {
+            time_format rfc3339
+        }
+    }
+
+    handle_path /alertmanager* {
+        reverse_proxy http://127.0.0.1:9093
+    }
+
+    handle_path /prometheus* {
+        reverse_proxy http://127.0.0.1:9090
+    }
+
+    handle /grafana* {
+        reverse_proxy http://127.0.0.1:3000
+    }
+
+    handle /api/live {
+        reverse_proxy http://127.0.0.1:3000 {
+            transport http {
+                versions 1.1
+            }
+        }
+    }
+
+    respond 404
+}
+
+:80 {
+    import config
+}
+
+{% if salt['elife.cfg']('cfn.outputs.DomainName') %}
+:443 {
+    import ../snippets/certs
+    import config
+}
+{% endif %}
+
