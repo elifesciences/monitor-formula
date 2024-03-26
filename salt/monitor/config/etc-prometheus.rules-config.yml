@@ -113,7 +113,7 @@ groups:
                 summary: "Disk I/O over 50% for 20mins: {{ $labels.ec2_name }}"
 
           - alert: DiskIOHigh
-            expr: rate(node_disk_io_time_weighted_seconds_total[2m]) > 0.8
+            expr: rate(node_disk_io_time_weighted_seconds_total[2m]) > 1
             for: 10m
             labels:
                 severity: critical
