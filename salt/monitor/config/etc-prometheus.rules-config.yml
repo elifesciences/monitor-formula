@@ -206,7 +206,7 @@ groups:
                 +
                   sum(rate(caddy_http_request_duration_seconds_bucket{le="1.0", env="prod"}[5m])) by (ec2_name)
                 ) / 2 / sum(rate(caddy_http_request_duration_seconds_count{env="prod"}[5m])) by (ec2_name)) < 0.9
-            for: 5m
+            for: 10m
             labels:
                 severity: critical
             annotations:
