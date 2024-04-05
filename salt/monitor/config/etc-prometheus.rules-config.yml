@@ -57,7 +57,8 @@ groups:
                 summary: "CPU usage over 70% for 10mins: {{ $labels.ec2_name }}"
 
           - alert: CPUUsageHigh
-            expr: (100 - (avg by(ec2_name, env) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 80
+            # lsh@2024-04-05: suppresed elife-libraries--powerful3. it would fire every time we run the bot-lax-adaptor job.
+            expr: (100 - (avg by(ec2_name, env) (rate(node_cpu_seconds_total{mode="idle",project_instance!="elife-libraries--powerful3"}[2m])) * 100)) > 80
             for: 15m
             labels:
                 severity: critical
