@@ -48,6 +48,7 @@ scrape_configs:
                   - annotations
                   - elife-alfred
                   - digests
+                  - pattern-library
                   #- lax
                   #- journal
                   #- foo
