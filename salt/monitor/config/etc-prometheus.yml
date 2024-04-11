@@ -50,6 +50,8 @@ scrape_configs:
                   - digests
                   - pattern-library
                   - profiles
+                  - monitor
+                  - lax
       relabel_configs:
           # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#ec2_sd_config
           - source_labels: ["__meta_ec2_tag_Name"]      # annotations--continuumtest--1
