@@ -49,10 +49,7 @@ scrape_configs:
                   - elife-alfred
                   - digests
                   - pattern-library
-                  #- lax
-                  #- journal
-                  #- foo
-                  #- bar
+                  - profiles
       relabel_configs:
           # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#ec2_sd_config
           - source_labels: ["__meta_ec2_tag_Name"]      # annotations--continuumtest--1
