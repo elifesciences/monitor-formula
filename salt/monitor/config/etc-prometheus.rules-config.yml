@@ -209,10 +209,25 @@ groups:
                 ) / 2 / sum(rate(caddy_http_request_duration_seconds_count{env="prod"}[5m])) by (ec2_name)) < 0.9
             for: 5m
             labels:
-                severity: critical
+                severity: warning
             annotations:
                 summary: "APDEX less than 0.9 for 5mins: {{ $labels.ec2_name }}"
                 description: "Overall webserver response times are taking too long to complete."
+
+          - alert: APDEX Low (Critical)
+            expr: |
+                ((
+                sum(rate(caddy_http_request_duration_seconds_bucket{le="0.25", env="prod", project_instance!~"recommendations--prod|personalised-covers--prod"}[5m])) by (ec2_name)
+                +
+                sum(rate(caddy_http_request_duration_seconds_bucket{le="1.0", env="prod"}[5m])) by (ec2_name)
+                ) / 2 / sum(rate(caddy_http_request_duration_seconds_count{env="prod"}[5m])) by (ec2_name)) < 0.7
+            for: 10m
+            labels:
+                severity: critical
+            annotations:
+                summary: "Critical: APDEX less than 0.7 for 10mins: {{ $labels.ec2_name }}"
+                description: "Overall webserver response times are critically slow."
+
 
           - alert: Web Error Percent High
             expr: |
