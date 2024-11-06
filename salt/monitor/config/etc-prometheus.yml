@@ -37,9 +37,7 @@ scrape_configs:
                 values:
                   - bioprotocol
                   - api-gateway
-                  - search
                   - redirects
-                  - api-dummy
                   - personalised-covers
                   - observer
                   - elife-metrics
