@@ -52,6 +52,7 @@ scrape_configs:
                   - lax
                   - journal-cms
                   - iiif
+                  - journal
       relabel_configs:
           # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#ec2_sd_config
           - source_labels: ["__meta_ec2_tag_Name"]      # annotations--continuumtest--1
@@ -90,4 +91,3 @@ alerting:
           basic_auth:
               username: "{{ pillar.monitor.prometheus.web.username }}"
               password: "{{ pillar.monitor.prometheus.web.password }}"
-
