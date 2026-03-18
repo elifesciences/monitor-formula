@@ -33,16 +33,21 @@ prometheus-home-absent:
         - require:
             - prometheus-user-group
 
+{% set PROMETHEUS_TARGZ_HASHES = {
+    "amd64": "d2177ea21a6f60046f9510c828d4f8969628cfd35686780b3898917ef9c268b9",
+    "arm64": "f42513c9ef63d6bed652dfc2e986b49ebec714ed784ccaac78e20e0a2a5535bc",
+} %}
+
 prometheus-installation:
     archive.extracted:
         - name: /srv
-        - source: https://github.com/prometheus/prometheus/releases/download/v2.46.0/prometheus-2.46.0.linux-amd64.tar.gz
-        - source_hash: d2177ea21a6f60046f9510c828d4f8969628cfd35686780b3898917ef9c268b9
+        - source: https://github.com/prometheus/prometheus/releases/download/v2.46.0/prometheus-2.46.0.linux-{{ grains['osarch'] }}.tar.gz
+        - source_hash: {{ PROMETHEUS_TARGZ_HASHES[grains['osarch']] }}
         - if_missing: /srv/prometheus
 
     file.symlink:
         - name: /srv/prometheus
-        - target: /srv/prometheus-2.46.0.linux-amd64
+        - target: /srv/prometheus-2.46.0.linux-{{ grains['osarch'] }}
         - force: true
         - require:
             - archive: prometheus-installation
@@ -144,11 +149,15 @@ grafana-home-absent:
         - require:
             - grafana-user-group
 
+{% set GRAFANA_TARGZ_HASHES = {
+    "amd64": "daeb7eee1327b6d407cdaaf1a234ec9d8e2ae5a6d085e0fd3d8c606214eb6032",
+    "arm64": "85a27bb2fbe5e00d5441e98e1844e7aaac567457e0861d4493f69f9b22bd4e52",
+} %}
 grafana-installation:
     archive.extracted:
         - name: /srv
-        - source: https://dl.grafana.com/oss/release/grafana-10.0.3.linux-amd64.tar.gz
-        - source_hash: daeb7eee1327b6d407cdaaf1a234ec9d8e2ae5a6d085e0fd3d8c606214eb6032
+        - source: https://dl.grafana.com/oss/release/grafana-10.0.3.linux-{{ grains['osarch'] }}.tar.gz
+        - source_hash: {{ GRAFANA_TARGZ_HASHES[grains['osarch']] }}
         - if_missing: /srv/grafana
 
     file.symlink:
@@ -283,16 +292,21 @@ alertmanager-home-absent:
         - require:
             - alertmanager-user-group
 
+{% set ALERTMANAGER_TARGZ_HASHES = {
+    "amd64": "206cf787c01921574ca171220bb9b48b043c3ad6e744017030fed586eb48e04b",
+    "arm64": "20db5e4e12bcce8e2e419cc4c2bc35062ddbc14d2aacb77e4d5684c0eab7f0fe",
+} %}
+
 alertmanager-installation:
     archive.extracted:
         - name: /srv
-        - source: https://github.com/prometheus/alertmanager/releases/download/v0.25.0/alertmanager-0.25.0.linux-amd64.tar.gz
-        - source_hash: 206cf787c01921574ca171220bb9b48b043c3ad6e744017030fed586eb48e04b
-        - if_missing: /srv/alertmanager-0.25.0.linux-amd64
+        - source: https://github.com/prometheus/alertmanager/releases/download/v0.25.0/alertmanager-0.25.0.linux-{{ grains['osarch'] }}.tar.gz
+        - source_hash: {{ ALERTMANAGER_TARGZ_HASHES[grains['osarch']] }}
+        - if_missing: /srv/alertmanager-0.25.0.linux-{{ grains['osarch'] }}
 
     file.symlink:
         - name: /srv/alertmanager
-        - target: /srv/alertmanager-0.25.0.linux-amd64
+        - target: /srv/alertmanager-0.25.0.linux-{{ grains['osarch'] }}
         - force: true
         - require:
             - archive: alertmanager-installation
@@ -380,11 +394,16 @@ yace-home-absent:
         - require:
             - yace-user-group
 
+{% set YACE_TARGZ_HASHES = {
+    "amd64": "b93e080a429388e68aaa6f3745268f959e2d9f9e979508038bbcf05b5c300660",
+    "arm64": "e4f73574146fd160ab146b73680648b061fad5ec2453dbff28e7728e464de675",
+} %}
+
 yace-installation:
     archive.extracted:
         - name: /usr/local/bin
-        - source: https://github.com/nerdswords/yet-another-cloudwatch-exporter/releases/download/v0.54.1/yet-another-cloudwatch-exporter_0.54.1_Linux_x86_64.tar.gz
-        - source_hash: b93e080a429388e68aaa6f3745268f959e2d9f9e979508038bbcf05b5c300660
+        - source: https://github.com/nerdswords/yet-another-cloudwatch-exporter/releases/download/v0.54.1/yet-another-cloudwatch-exporter_0.54.1_Linux_{{ "x86_64" if grains['osarch'] == "amd64" else grains['osarch'] }}.tar.gz
+        - source_hash: {{ YACE_TARGZ_HASHES[grains['osarch']] }}
         - enforce_toplevel: false
         - if_missing: /usr/local/bin/yace
 
