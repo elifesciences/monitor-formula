@@ -20,6 +20,7 @@ prometheus-user-group:
         - name: prometheus
         - shell: /bin/false
         - createhome: false
+        - system: True
         - groups:
             - prometheus
         - require:
@@ -130,6 +131,7 @@ grafana-user-group:
         - name: grafana
         - shell: /bin/false
         - createhome: false
+        - system: True
         - groups:
             - grafana
         - require:
@@ -268,6 +270,7 @@ alertmanager-user-group:
         - name: alertmanager
         - shell: /bin/false
         - createhome: false
+        - system: True
         - groups:
             - alertmanager
         - require:
@@ -364,6 +367,7 @@ yace-user-group:
         - name: yace
         - shell: /bin/false
         - createhome: false
+        - system: True
         - groups:
             - yace
         - require:
