@@ -52,11 +52,13 @@ route:
         - matchers:
             - "severity = critical"
           receiver: techalerts
+          continue: true
 
         {% if 'slack_channel' in pillar.monitor.alertmanager.receiver and 'slack_api_url' in pillar.monitor.alertmanager.receiver %}
         - matchers:
             - "severity = critical"
           receiver: slack-monitoring
+          continue: true
         {% endif %}
 
 
