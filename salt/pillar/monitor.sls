@@ -30,6 +30,8 @@ monitor:
         # email address to send alerts to by default
         receiver:
             email_to: bar@example.org
+            slack_api_url: http://test_url
+            slack_channel: #nowhere
         # email address to send alerts for experimental rules that need review first
         experimental_receiver:
             email_to: baz@example.org

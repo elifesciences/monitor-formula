@@ -16,6 +16,14 @@ receivers:
           - to: "{{ pillar.monitor.alertmanager.receiver.email_to }}"
             send_resolved: true
 
+    {% if 'slack_channel' in pillar.monitor.alertmanager.receiver and 'slack_api_url' in pillar.monitor.alertmanager.receiver %}
+    - name: slack-monitoring
+      slack_configs:
+        - api_url: "{{ pillar.monitor.alertmanager.receiver.slack_api_url }}"
+          channel: "{{ pillar.monitor.alertmanager.receiver.slack_channel }}"
+          send_resolved: true
+    {% endif %}
+
     - name: experimental
       email_configs:
           - to: "{{ pillar.monitor.alertmanager.experimental_receiver.email_to }}"
@@ -44,6 +52,13 @@ route:
         - matchers:
             - "severity = critical"
           receiver: techalerts
+
+        {% if 'slack_channel' in pillar.monitor.alertmanager.receiver and 'slack_api_url' in pillar.monitor.alertmanager.receiver %}
+        - matchers:
+            - "severity = critical"
+          receiver: slack-monitoring
+        {% endif %}
+
 
         # lsh@2024-03-22: env matcher removed. too many checks don't surface an 'env' field and
         # label rewriting doesn't seem to have an effect.
@@ -82,4 +97,3 @@ inhibit_rules:
       #   from both the source and target alerts,
       #   the inhibition rule will apply!
       equal: ["alertname"]
-
